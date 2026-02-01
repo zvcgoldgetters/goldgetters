@@ -21,31 +21,28 @@ function applyTheme(theme: Theme) {
 }
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<Theme>('light');
-
-  // Initialize from DOM/localStorage on mount
-  useEffect(() => {
+  const [theme, setTheme] = useState<Theme>(() => {
+    if (typeof window === 'undefined') return 'light';
     const stored = getStoredTheme();
-    let next: Theme = 'light';
-    if (stored) {
-      next = stored;
-    } else if (typeof window !== 'undefined' && window.matchMedia) {
-      next = window.matchMedia('(prefers-color-scheme: dark)').matches
+    if (stored) return stored;
+    if (window.matchMedia) {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches
         ? 'dark'
         : 'light';
     }
-    setTheme(next);
-    applyTheme(next);
-  }, []);
+    return 'light';
+  });
+
+  useEffect(() => {
+    applyTheme(theme);
+    try {
+      localStorage.setItem('theme', theme);
+    } catch {}
+  }, [theme]);
 
   const toggle = useCallback(() => {
-    const next: Theme = theme === 'dark' ? 'light' : 'dark';
-    setTheme(next);
-    try {
-      localStorage.setItem('theme', next);
-    } catch {}
-    applyTheme(next);
-  }, [theme]);
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  }, []);
 
   return (
     <button
