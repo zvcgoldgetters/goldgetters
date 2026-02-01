@@ -57,7 +57,8 @@ const fieldErrorVariants = cva('text-sm font-medium', {
 });
 
 interface FieldErrorProps
-  extends React.HTMLAttributes<HTMLParagraphElement>,
+  extends
+    React.HTMLAttributes<HTMLParagraphElement>,
     VariantProps<typeof fieldErrorVariants> {
   errors?: Array<{ message?: string } | undefined>;
 }
