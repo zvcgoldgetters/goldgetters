@@ -49,16 +49,20 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
     {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
-    {
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
     },
+    {
+      name: 'mobile-chrome',
+      use: { ...devices['Pixel 7'] },
+    },
+    {
+      name: 'mobile-safari',
+      use: { ...devices['iPhone 14'] },
+    },
   ],
   webServer: {
-    command: 'npm run dev',
+    command: "NEXT_PUBLIC_TURNSTILE_SITE_KEY='' npm run dev",
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
   },
