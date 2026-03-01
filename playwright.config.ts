@@ -1,6 +1,17 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const coverageSourceDir = process.env.COVERAGE_SOURCE_DIR ?? 'src';
+const configuredCoverageDirs =
+  process.env.COVERAGE_SOURCE_DIRS ??
+  process.env.COVERAGE_SOURCE_DIR ??
+  'app,components,lib,collections';
+
+const coverageFilters = Object.fromEntries(
+  configuredCoverageDirs
+    .split(',')
+    .map((dir) => dir.trim())
+    .filter(Boolean)
+    .map((dir) => [`**/${dir}/**`, true]),
+);
 
 export default defineConfig({
   testDir: './e2e',
@@ -20,11 +31,10 @@ export default defineConfig({
           outputDir: './monocart-report',
           sourceMap: true,
           entryFilter: {
-            [`**/${coverageSourceDir}/**`]: true,
+            '**': true,
+            '**/node_modules/**': false,
           },
-          sourceFilter: {
-            [`**/${coverageSourceDir}/**`]: true,
-          },
+          sourceFilter: coverageFilters,
         },
       },
     ],
