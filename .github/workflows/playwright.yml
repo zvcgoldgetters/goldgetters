@@ -1,0 +1,149 @@
+name: Playwright E2E Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  e2e:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Cache node_modules
+        id: node-modules-cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+
+      - name: Install npm dependencies
+        if: steps.node-modules-cache.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Install jq
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq
+
+      - name: Get installed Playwright version
+        id: playwright-version
+        run: echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test --depth=0 --json | jq -r '.dependencies[\"@playwright/test\"].version')" >> $GITHUB_ENV
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+
+      - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps
+
+      - name: Install Playwright system dependencies
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps
+
+      - name: Run Playwright tests
+        run: npm run e2e
+
+      - name: Append coverage markdown summary
+        if: always()
+        run: |
+          if [ -d "monocart-report" ]; then
+            MD_FILE=$(find monocart-report -type f -name "coverage-summary.md" | head -n 1)
+          else
+            MD_FILE=""
+          fi
+          if [ -n "$MD_FILE" ]; then
+            cat "$MD_FILE" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Coverage summary file not found in monocart-report/" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Extract total statements %
+        id: coverage
+        if: always()
+        run: |
+          if [ -d "monocart-report" ]; then
+            JSON_FILE=$(find monocart-report -type f -name "coverage-summary.json" | head -n 1)
+          else
+            JSON_FILE=""
+          fi
+          if [ -n "$JSON_FILE" ]; then
+            VALUE=$(jq -r '.total.statements.pct // 0' "$JSON_FILE")
+          else
+            VALUE="0"
+          fi
+          if awk "BEGIN {exit !($VALUE >= 90)}"; then
+            COLOR="brightgreen"
+          elif awk "BEGIN {exit !($VALUE >= 75)}"; then
+            COLOR="yellowgreen"
+          elif awk "BEGIN {exit !($VALUE >= 60)}"; then
+            COLOR="yellow"
+          else
+            COLOR="red"
+          fi
+          echo "statements_pct=$VALUE" >> "$GITHUB_OUTPUT"
+          echo "color=$COLOR" >> "$GITHUB_OUTPUT"
+
+      - name: Generate coverage badge endpoint JSON
+        if: always()
+        run: |
+          mkdir -p monocart-report
+          cat <<EOF > monocart-report/coverage-badge.json
+          {"schemaVersion":1,"label":"coverage","message":"${{ steps.coverage.outputs.statements_pct }}%","color":"${{ steps.coverage.outputs.color }}"}
+          EOF
+
+      - name: Upload Monocart report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: monocart-report
+          path: monocart-report/
+          retention-days: 30
+
+  publish-coverage-badge:
+    needs: e2e
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+      contents: read
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Download Monocart report artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: monocart-report
+          path: pages
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: pages
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
