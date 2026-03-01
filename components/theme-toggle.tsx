@@ -21,6 +21,7 @@ function applyTheme(theme: Theme) {
 }
 
 export function ThemeToggle() {
+  const [mounted, setMounted] = useState(false);
   const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window === 'undefined') return 'light';
     const stored = getStoredTheme();
@@ -32,6 +33,13 @@ export function ThemeToggle() {
     }
     return 'light';
   });
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => {
+      setMounted(true);
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
 
   useEffect(() => {
     applyTheme(theme);
@@ -47,11 +55,14 @@ export function ThemeToggle() {
   return (
     <button
       type="button"
-      onClick={toggle}
+      onClick={mounted ? toggle : undefined}
       aria-label="Toggle theme"
+      aria-disabled={!mounted}
       className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-background text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
-      {theme === 'dark' ? (
+      {!mounted ? (
+        <Moon className="h-4 w-4" />
+      ) : theme === 'dark' ? (
         <Sun className="h-4 w-4" />
       ) : (
         <Moon className="h-4 w-4" />

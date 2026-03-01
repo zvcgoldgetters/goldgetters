@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Field, FieldLabel, FieldError } from '@/components/ui/field';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Turnstile, TurnstileRef } from '@/components/turnstile';
+import { clientEnv } from '@/lib/env/client';
 
 interface FormData {
   name: string;
@@ -37,7 +38,7 @@ export function ContactForm() {
   >('idle');
   const [turnstileToken, setTurnstileToken] = useState<string>('');
   const turnstileRef = useRef<TurnstileRef>(null);
-  const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+  const siteKey = clientEnv.turnstileSiteKey;
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};

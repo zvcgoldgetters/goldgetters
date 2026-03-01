@@ -34,7 +34,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="nl-BE" suppressHydrationWarning>
       <head>
         <script
           // Prevent theme flash on first paint
