@@ -1,9 +1,10 @@
 import { test, expect } from './fixtures';
+import { HomePage } from './pages/home-page';
 
 test('has title', async ({ page }) => {
-  await page.goto('/');
+  const homePage = new HomePage(page);
+  await homePage.goto();
+  await expect(homePage.mainHeading).toBeVisible();
 
-  // Expect a title "to contain" a substring.
-  // Note: The actual title depends on the app, checking generic expectation or just that page loads
   await expect(page).toHaveTitle(/Goldgetters|ZVC/);
 });
