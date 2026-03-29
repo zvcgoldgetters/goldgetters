@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Moon, Sun } from 'lucide-react';
 
 type Theme = 'light' | 'dark';
@@ -58,7 +58,7 @@ export function ThemeToggle() {
       onClick={mounted ? toggle : undefined}
       aria-label="Toggle theme"
       aria-disabled={!mounted}
-      className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-background text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#5c461c]/14 bg-white/40 text-[#3a2a0d]/86 transition-colors hover:bg-white/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a07630]/30 sm:h-11 sm:w-11 dark:border-white/12 dark:bg-white/8 dark:text-white dark:hover:bg-white/14 dark:focus-visible:ring-white/40"
     >
       {!mounted ? (
         <Moon className="h-4 w-4" />

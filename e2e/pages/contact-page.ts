@@ -13,7 +13,10 @@ export class ContactPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.heading = page.getByRole('heading', { name: /^contact$/i, level: 1 });
+    this.heading = page.getByRole('heading', {
+      name: /praat met.*club/i,
+      level: 1,
+    });
     this.nameInput = page.getByRole('textbox', { name: /naam/i });
     this.emailInput = page.getByRole('textbox', { name: /e-mailadres/i });
     this.subjectInput = page.getByRole('textbox', { name: /onderwerp/i });

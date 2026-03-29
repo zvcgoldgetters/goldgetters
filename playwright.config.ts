@@ -60,6 +60,20 @@ export default defineConfig({
       name: 'mobile-safari',
       use: { ...devices['iPhone 14'] },
     },
+    {
+      name: 'mobile-320-chrome',
+      use: {
+        ...devices['Pixel 7'],
+        viewport: { width: 320, height: 900 },
+      },
+    },
+    {
+      name: 'mobile-320-safari',
+      use: {
+        ...devices['iPhone 14'],
+        viewport: { width: 320, height: 900 },
+      },
+    },
   ],
   webServer: {
     command: "NEXT_PUBLIC_TURNSTILE_SITE_KEY='' npm run dev",
