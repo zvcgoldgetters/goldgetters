@@ -30,11 +30,24 @@ interface TurnstileProps {
   onVerify: (token: string) => void;
   onError?: () => void;
   onExpire?: () => void;
+  onReady?: () => void;
+  onLoadError?: () => void;
   theme?: 'light' | 'dark' | 'auto';
 }
 
 export const Turnstile = forwardRef<TurnstileRef, TurnstileProps>(
-  ({ siteKey, onVerify, onError, onExpire, theme = 'auto' }, ref) => {
+  (
+    {
+      siteKey,
+      onVerify,
+      onError,
+      onExpire,
+      onReady,
+      onLoadError,
+      theme = 'auto',
+    },
+    ref,
+  ) => {
     const turnstileRef = useRef<HTMLDivElement>(null);
     const widgetIdRef = useRef<string>('');
 
@@ -66,6 +79,9 @@ export const Turnstile = forwardRef<TurnstileRef, TurnstileProps>(
             'expired-callback': onExpire,
             theme,
           });
+          onReady?.();
+        } else {
+          onLoadError?.();
         }
       };
 
@@ -76,6 +92,7 @@ export const Turnstile = forwardRef<TurnstileRef, TurnstileProps>(
         script.async = true;
         script.defer = true;
         script.onload = renderWidget;
+        script.onerror = onLoadError ?? null;
         document.body.appendChild(script);
       } else if (window.turnstile) {
         // If script is already loaded
@@ -105,7 +122,7 @@ export const Turnstile = forwardRef<TurnstileRef, TurnstileProps>(
         // We don't remove the script tag to avoid breaking other instances if any,
         // or re-loading penalties.
       };
-    }, [siteKey, theme, onVerify, onError, onExpire]);
+    }, [siteKey, theme, onVerify, onError, onExpire, onReady, onLoadError]);
 
     return <div ref={turnstileRef} />;
   },

@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import { Barlow, Oswald } from 'next/font/google';
 import './globals.css';
-import { SiteHeader } from '@/components/site-header';
-import { SiteFooter } from '@/components/site-footer';
+import { nl } from '@/lib/i18n/nl';
+import { GoldgettersShell } from '@/components/goldgetters/layout/shell';
+import { GoldgettersHeader } from '@/components/goldgetters/site/header';
+import { GoldgettersFooter } from '@/components/goldgetters/site/footer';
 
 const sans = Barlow({
   variable: '--font-sans',
@@ -19,9 +21,8 @@ const display = Oswald({
 });
 
 export const metadata: Metadata = {
-  title: 'ZVC Goldgetters - Zaalvoetbalclub',
-  description:
-    'Officiële website van ZVC Goldgetters. Volg ons nieuws, bekijk wedstrijden, ontdek onze ploeg en statistieken van de Goldgetters zaalvoetbalclub.',
+  title: nl.frontend.metadata.title,
+  description: nl.frontend.metadata.description,
   icons: {
     icon: [{ url: '/icon.png', sizes: 'any', type: 'image/png' }],
     apple: [{ url: '/apple-icon.png', sizes: '180x180', type: 'image/png' }],
@@ -43,12 +44,12 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body
-        className={`${sans.variable} ${display.variable} antialiased flex flex-col min-h-screen`}
-      >
-        <SiteHeader />
-        <main className="mx-auto w-full max-w-5xl px-4 flex-1">{children}</main>
-        <SiteFooter />
+      <body className={`${sans.variable} ${display.variable} antialiased`}>
+        <GoldgettersShell>
+          <GoldgettersHeader />
+          <main>{children}</main>
+          <GoldgettersFooter />
+        </GoldgettersShell>
       </body>
     </html>
   );

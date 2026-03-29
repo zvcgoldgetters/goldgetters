@@ -141,6 +141,24 @@
     #775225 93%,
     #40250a 100%
   );
+  --goldgetters-button-text: #fff6de;
+  --goldgetters-button-shadow: 0 18px 42px rgba(203, 156, 77, 0.16);
+  --goldgetters-button-shadow-hover: 0 22px 48px rgba(203, 156, 77, 0.22);
+  --goldgetters-form-label: color-mix(
+    in oklab,
+    var(--foreground) 70%,
+    #8a6a31 30%
+  );
+  --goldgetters-form-error: color-mix(in oklab, #ef4444 78%, #fff 22%);
+  --goldgetters-form-required: #d8a24b;
+  --goldgetters-form-input-border: rgb(88 63 21 / 0.12);
+  --goldgetters-form-input-bg: rgb(255 255 255 / 0.45);
+  --goldgetters-form-input-text: rgb(28 21 11 / 0.96);
+  --goldgetters-form-input-placeholder: rgb(75 58 28 / 0.72);
+  --goldgetters-form-input-focus-border: rgb(217 165 74 / 0.42);
+  --goldgetters-form-input-focus-bg: rgb(255 255 255 / 0.82);
+  --goldgetters-form-input-focus-shadow:
+    0 0 0 1px rgb(217 165 74 / 0.3), 0 0 30px rgb(217 165 74 / 0.08);
 }
 
 .dark {
@@ -159,8 +177,8 @@
   --accent: oklch(0.2686 0 0);
   --accent-foreground: oklch(0.9851 0 0);
   --destructive: oklch(0.7022 0.1892 22.2279);
-  --border: oklch(1 0 0);
-  --input: oklch(1 0 0);
+  --border: oklch(1 0 0 / 0.14);
+  --input: oklch(1 0 0 / 0.14);
   --ring: oklch(0.5555 0 0);
   --chart-1: oklch(0.4878 0.2432 264.4045);
   --chart-2: oklch(0.7019 0.1577 160.4375);
@@ -215,11 +233,28 @@
     #e1b453 93%,
     #a4692a 100%
   );
+  --goldgetters-button-text: #1a1308;
+  --goldgetters-button-shadow: 0 18px 42px rgba(161, 114, 43, 0.24);
+  --goldgetters-button-shadow-hover: 0 22px 48px rgba(161, 114, 43, 0.3);
+  --goldgetters-form-label: rgb(255 255 255 / 0.66);
+  --goldgetters-form-error: rgb(255 149 149 / 0.92);
+  --goldgetters-form-required: #d8a24b;
+  --goldgetters-form-input-border: rgb(255 255 255 / 0.12);
+  --goldgetters-form-input-bg: rgb(255 255 255 / 0.03);
+  --goldgetters-form-input-text: white;
+  --goldgetters-form-input-placeholder: rgb(255 255 255 / 0.62);
+  --goldgetters-form-input-focus-border: rgb(217 165 74 / 0.42);
+  --goldgetters-form-input-focus-bg: rgb(255 255 255 / 0.05);
+  --goldgetters-form-input-focus-shadow:
+    0 0 0 1px rgb(217 165 74 / 0.3), 0 0 30px rgb(217 165 74 / 0.08);
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
+  }
+  html {
+    scroll-behavior: smooth;
   }
   body {
     @apply bg-background text-foreground;
@@ -249,5 +284,15 @@
   }
   100% {
     background-position: 0% 50%;
+  }
+}
+
+@keyframes beam-sway {
+  0%,
+  100% {
+    transform: rotate(18deg) translateY(0);
+  }
+  50% {
+    transform: rotate(14deg) translateY(1.25rem);
   }
 }
