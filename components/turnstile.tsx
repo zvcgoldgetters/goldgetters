@@ -60,7 +60,9 @@ export const Turnstile = forwardRef<TurnstileRef, TurnstileProps>(
     }));
 
     useEffect(() => {
-      if (!siteKey) return;
+      if (!siteKey) {
+        return;
+      }
 
       const scriptId = 'cloudflare-turnstile-script';
       let script = document.getElementById(scriptId) as HTMLScriptElement;
@@ -106,9 +108,9 @@ export const Turnstile = forwardRef<TurnstileRef, TurnstileProps>(
         // We can just poll or hook into onload if possible, but let's assume
         // standard flow for now.
         const originalOnLoad = script.onload;
-        script.onload = (e) => {
+        script.onload = (event) => {
           if (typeof originalOnLoad === 'function') {
-            originalOnLoad.call(script, e);
+            originalOnLoad.call(script, event);
           }
           renderWidget();
         };

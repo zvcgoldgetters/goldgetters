@@ -14,7 +14,9 @@ function escapeHtml(value: string): string {
 export async function sendContactEmail(
   data: ContactFormData,
 ): Promise<boolean> {
-  if (!isSmtpConfigured()) return false;
+  if (!isSmtpConfigured()) {
+    return false;
+  }
 
   const transporter = nodemailer.createTransport({
     host: serverEnv.smtpHost,
