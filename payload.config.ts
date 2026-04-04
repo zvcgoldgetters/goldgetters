@@ -16,6 +16,17 @@ if (!serverEnv.payloadSecret) {
 export default buildConfig({
   admin: {
     user: 'users',
+    autoLogin:
+      process.env.NODE_ENV === 'development' &&
+      serverEnv.payloadAutoLoginEnabled &&
+      serverEnv.payloadAdminEmail &&
+      serverEnv.payloadAdminPassword
+        ? {
+            email: serverEnv.payloadAdminEmail,
+            password: serverEnv.payloadAdminPassword,
+            prefillOnly: false,
+          }
+        : false,
     importMap: {
       baseDir: path.resolve(dirname),
     },
