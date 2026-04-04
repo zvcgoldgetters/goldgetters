@@ -2,10 +2,10 @@
 
 import { useEffect } from 'react';
 
-type ErrorProps = {
+interface ErrorProps {
   error: Error & { digest?: string };
   reset: () => void;
-};
+}
 
 export default function FrontendError({ error, reset }: ErrorProps) {
   useEffect(() => {

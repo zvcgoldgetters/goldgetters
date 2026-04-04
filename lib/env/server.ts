@@ -2,7 +2,9 @@ const EMPTY_ENV_VALUES = new Set(['', '""', "''", 'null', 'undefined']);
 
 function readEnv(name: string): string | undefined {
   const trimmed = process.env[name]?.trim();
-  if (!trimmed) return undefined;
+  if (!trimmed) {
+    return undefined;
+  }
   return EMPTY_ENV_VALUES.has(trimmed.toLowerCase()) ? undefined : trimmed;
 }
 

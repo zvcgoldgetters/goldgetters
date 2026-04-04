@@ -66,7 +66,9 @@ export function ContactForm() {
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
 
-    if (!formData.name.trim()) newErrors.name = nl.contact.form.nameRequired;
+    if (!formData.name.trim()) {
+      newErrors.name = nl.contact.form.nameRequired;
+    }
 
     if (!formData.email.trim()) {
       newErrors.email = nl.contact.form.emailRequired;
@@ -74,10 +76,12 @@ export function ContactForm() {
       newErrors.email = nl.contact.form.emailInvalid;
     }
 
-    if (!formData.subject.trim())
+    if (!formData.subject.trim()) {
       newErrors.subject = nl.contact.form.subjectRequired;
-    if (!formData.message.trim())
+    }
+    if (!formData.message.trim()) {
       newErrors.message = nl.contact.form.messageRequired;
+    }
     if (shouldRenderTurnstile && !turnstileToken) {
       newErrors.turnstile = nl.contact.form.turnstileRequired;
     }
@@ -86,10 +90,12 @@ export function ContactForm() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
 
-    if (!validateForm()) return;
+    if (!validateForm()) {
+      return;
+    }
 
     setIsSubmitting(true);
     setSubmitStatus('idle');
@@ -104,7 +110,9 @@ export function ContactForm() {
         }),
       });
 
-      if (!response.ok) throw new Error('Failed to send message');
+      if (!response.ok) {
+        throw new Error('Failed to send message');
+      }
 
       setSubmitStatus('success');
       setFormData({ name: '', email: '', subject: '', message: '' });
@@ -119,9 +127,9 @@ export function ContactForm() {
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    const { name, value } = e.target;
+    const { name, value } = event.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
 
     if (errors[name as keyof FormErrors]) {

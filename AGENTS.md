@@ -46,8 +46,10 @@ When implementing changes:
 3. Run targeted validation first, then broader checks:
    - Minimum: `npm run lint`
    - If behavior changes: relevant `npm run test` or `npm run e2e`
-4. If schema/content model changes are made, include a migration and run `npm run migrate`.
-5. Summarize exactly what was changed and list any checks not run.
+4. Always run Prettier before handoff:
+   - `npm run format`
+5. If schema/content model changes are made, include a migration and run `npm run migrate`.
+6. Summarize exactly what was changed and list any checks not run.
 
 ## Coding Conventions
 

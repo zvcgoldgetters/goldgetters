@@ -1,14 +1,18 @@
 import { serverEnv } from '@/lib/env/server';
 
 export async function verifyTurnstileToken(token: string): Promise<boolean> {
-  if (!serverEnv.turnstileSecretKey) return false;
+  if (!serverEnv.turnstileSecretKey) {
+    return false;
+  }
 
   try {
+    const headers = new Headers();
+    headers.set('Content-Type', 'application/json');
     const response = await fetch(
       'https://challenges.cloudflare.com/turnstile/v0/siteverify',
       {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({
           secret: serverEnv.turnstileSecretKey,
           response: token,
@@ -16,7 +20,9 @@ export async function verifyTurnstileToken(token: string): Promise<boolean> {
       },
     );
 
-    if (!response.ok) return false;
+    if (!response.ok) {
+      return false;
+    }
     const data = (await response.json()) as { success?: boolean };
     return data.success === true;
   } catch {

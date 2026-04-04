@@ -4,7 +4,7 @@ import { verifyTurnstileToken } from '@/features/contact/server/turnstile';
 import { sendContactEmail } from '@/features/contact/server/mailer';
 import { serverEnv } from '@/lib/env/server';
 
-export async function POST(request: Request) {
+async function post(request: Request) {
   try {
     const payload = await request.json();
     const { data, error } = validateContactPayload(payload);
@@ -46,3 +46,5 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Interne serverfout' }, { status: 500 });
   }
 }
+
+export { post as POST };
