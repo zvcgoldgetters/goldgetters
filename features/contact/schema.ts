@@ -11,7 +11,30 @@ export interface ContactValidationResult {
   error?: string;
 }
 
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+function isValidEmail(value: string): boolean {
+  if (/\s/.test(value)) {
+    return false;
+  }
+
+  const atIndex = value.indexOf('@');
+  if (atIndex <= 0 || atIndex !== value.lastIndexOf('@')) {
+    return false;
+  }
+
+  const local = value.slice(0, atIndex);
+  const domain = value.slice(atIndex + 1);
+
+  if (!local || !domain || domain.startsWith('.') || domain.endsWith('.')) {
+    return false;
+  }
+
+  if (domain.includes('..')) {
+    return false;
+  }
+
+  const dotIndex = domain.indexOf('.');
+  return dotIndex > 0 && dotIndex < domain.length - 1;
+}
 
 function clean(value: unknown): string {
   return typeof value === 'string' ? value.trim() : '';
@@ -38,7 +61,7 @@ export function validateContactPayload(
     return { error: 'Alle velden zijn verplicht' };
   }
 
-  if (!EMAIL_REGEX.test(data.email)) {
+  if (!isValidEmail(data.email)) {
     return { error: 'Ongeldig e-mailadres' };
   }
 
