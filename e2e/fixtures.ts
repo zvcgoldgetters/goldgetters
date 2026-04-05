@@ -5,7 +5,6 @@ export const test = base.extend({
   page: async ({ page, browserName }, runFixture, testInfo) => {
     const canCollectCoverage =
       browserName === 'chromium' &&
-      !!page.coverage &&
       typeof page.coverage.startJSCoverage === 'function' &&
       typeof page.coverage.stopJSCoverage === 'function';
 

@@ -2,6 +2,9 @@ import { test, expect } from './fixtures';
 import { ContactPage } from './pages/contact-page';
 import type { Page } from '@playwright/test';
 
+const SUCCESS_STATUS = 200;
+const SERVER_ERROR_STATUS = 500;
+
 async function mockTurnstile(page: Page) {
   await page.route(
     'https://challenges.cloudflare.com/turnstile/v0/api.js',
@@ -67,7 +70,7 @@ test('contact form shows success message when API responds with 200', async ({
 
   await page.route('**/api/contact', async (route) => {
     await route.fulfill({
-      status: 200,
+      status: SUCCESS_STATUS,
       contentType: 'application/json',
       body: JSON.stringify({ message: 'E-mail succesvol verzonden' }),
     });
@@ -79,7 +82,7 @@ test('contact form shows success message when API responds with 200', async ({
     (response) =>
       response.url().includes('/api/contact') &&
       response.request().method() === 'POST' &&
-      response.status() === 200,
+      response.status() === SUCCESS_STATUS,
   );
   await contactPage.submitButton.click();
   await successResponse;
@@ -99,7 +102,7 @@ test('contact form shows API error message when request fails', async ({
 
   await page.route('**/api/contact', async (route) => {
     await route.fulfill({
-      status: 500,
+      status: SERVER_ERROR_STATUS,
       contentType: 'application/json',
       body: JSON.stringify({ error: 'Interne serverfout' }),
     });
@@ -111,7 +114,7 @@ test('contact form shows API error message when request fails', async ({
     (response) =>
       response.url().includes('/api/contact') &&
       response.request().method() === 'POST' &&
-      response.status() === 500,
+      response.status() === SERVER_ERROR_STATUS,
   );
   await contactPage.submitButton.click();
   await errorResponse;

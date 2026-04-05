@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { GoldgettersGrid } from '@/components/goldgetters/layout/grid';
 
 type GoldgettersShellProps = React.HTMLAttributes<HTMLDivElement>;

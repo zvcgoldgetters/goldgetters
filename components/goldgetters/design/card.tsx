@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
