@@ -1,30 +1,105 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Goldgetters
 
-## Getting Started
+Goldgetters is a Next.js 16 application with a public frontend and an integrated Payload CMS admin.
 
-First, run the development server:
+## Stack
+
+- Next.js 16 (App Router)
+- React 19
+- TypeScript
+- Tailwind CSS 4
+- Payload CMS 3
+- SQLite
+
+## Prerequisites
+
+- Node.js 20+
+- npm (this repo uses `package-lock.json`)
+
+## Setup
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Create your local environment file:
+
+```bash
+cp .env.example .env
+```
+
+3. Fill in required values in `.env`:
+
+- `PAYLOAD_SECRET` (required)
+- `DATABASE_URI` (defaults to `file:./payload.db` if omitted)
+- SMTP values for contact email flow:
+  - `SMTP_HOST`
+  - `SMTP_PORT`
+  - `SMTP_USER`
+  - `SMTP_PASS`
+- Turnstile values for contact form:
+  - `NEXT_PUBLIC_TURNSTILE_SITE_KEY`
+  - `TURNSTILE_SECRET_KEY`
+- Optional:
+  - `CONTACT_EMAIL_TO`
+  - `CONTACT_EMAIL_FROM`
+  - `PAYLOAD_AUTO_LOGIN_ENABLED`
+  - `PAYLOAD_ADMIN_EMAIL`
+  - `PAYLOAD_ADMIN_PASSWORD`
+  - `DATABASE_AUTH_TOKEN`
+
+## Development
+
+Run the dev server:
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+App: [http://localhost:3000](http://localhost:3000)  
+Payload admin: [http://localhost:3000/admin](http://localhost:3000/admin)
 
-You can start editing the page by modifying `app/(frontend)/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `npm run dev` - start local development server
+- `npm run build` - run Payload migrations, then build Next.js
+- `npm run ci` - CI-equivalent build (`payload migrate && next build`)
+- `npm run start` - start production server
+- `npm run lint` - run ESLint
+- `npm run format` - run Prettier write
+- `npm run format:check` - run Prettier check
+- `npm run test` - run Vitest unit/integration tests
+- `npm run e2e` - run Playwright end-to-end tests
+- `npm run migrate` - run pending Payload migrations
+- `npm run migrate:create` - create a new migration
+- `npm run migrate:down` - roll back a migration
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+- `app/(frontend)` - public routes/pages
+- `app/(payload)` - Payload admin integration and generated admin layout
+- `components/` - shared UI components
+- `features/contact/` - contact form validation + server integrations
+- `payload/` - collections and CMS schema
+- `migrations/` - Payload migrations
+- `e2e/` - Playwright tests
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Testing & Quality
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Typical local validation flow:
 
-## Deploy on Vercel
+```bash
+npm run lint
+npm run test
+npm run e2e
+npm run format
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Use targeted checks where possible, then run broader checks before merging.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Notes
+
+- Payload GraphQL is disabled in this project.
+- The Payload admin layout file under `app/(payload)/layout.tsx` is generated. Prefer changing source config files instead of editing generated files directly.
