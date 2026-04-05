@@ -6,7 +6,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Field, FieldLabel, FieldError } from '@/components/ui/field';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Turnstile, TurnstileRef } from '@/components/turnstile';
+import type { TurnstileRef } from '@/components/turnstile';
+import { Turnstile } from '@/components/turnstile';
 import { clientEnv } from '@/lib/env/client';
 
 interface FormData {
@@ -41,36 +42,33 @@ export function ContactForm() {
   const siteKey = clientEnv.turnstileSiteKey;
 
   const validateForm = (): boolean => {
-    const newErrors: FormErrors = {};
+    const emailError = (() => {
+      if (!formData.email.trim()) {
+        return 'E-mailadres is verplicht';
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+        return 'Ongeldig e-mailadres';
+      }
+      return undefined;
+    })();
 
-    if (!formData.name.trim()) {
-      newErrors.name = 'Naam is verplicht';
-    }
-
-    if (!formData.email.trim()) {
-      newErrors.email = 'E-mailadres is verplicht';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Ongeldig e-mailadres';
-    }
-
-    if (!formData.subject.trim()) {
-      newErrors.subject = 'Onderwerp is verplicht';
-    }
-
-    if (!formData.message.trim()) {
-      newErrors.message = 'Bericht is verplicht';
-    }
-
-    // Only validate turnstile if the site key is configured
-    if (siteKey && !turnstileToken) {
-      newErrors.turnstile = 'Gelieve de verificatie te voltooien';
-    }
+    const newErrors: FormErrors = {
+      ...(!formData.name.trim() ? { name: 'Naam is verplicht' } : {}),
+      ...(emailError ? { email: emailError } : {}),
+      ...(!formData.subject.trim()
+        ? { subject: 'Onderwerp is verplicht' }
+        : {}),
+      ...(!formData.message.trim() ? { message: 'Bericht is verplicht' } : {}),
+      ...(siteKey && !turnstileToken
+        ? { turnstile: 'Gelieve de verificatie te voltooien' }
+        : {}),
+    };
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (!validateForm()) {
@@ -120,7 +118,12 @@ export function ContactForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form
+      onSubmit={(event) => {
+        void handleSubmit(event);
+      }}
+      className="space-y-6"
+    >
       <Field data-invalid={!!errors.name}>
         <FieldLabel htmlFor="name">
           Naam <span className="text-destructive">*</span>

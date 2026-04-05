@@ -2,7 +2,8 @@
 
 import { useRef, useState } from 'react';
 import { ArrowRight, CheckCircle2, ShieldCheck } from 'lucide-react';
-import { Turnstile, TurnstileRef } from '@/components/turnstile';
+import type { TurnstileRef } from '@/components/turnstile';
+import { Turnstile } from '@/components/turnstile';
 import { nl } from '@/lib/i18n/nl';
 import { GoldgettersButton } from '@/components/goldgetters/design/button';
 import {
@@ -64,33 +65,35 @@ export function ContactForm() {
   const shouldRenderTurnstile = Boolean(siteKey);
 
   const validateForm = (): boolean => {
-    const newErrors: FormErrors = {};
+    const emailError = (() => {
+      if (!formData.email.trim()) {
+        return nl.contact.form.emailRequired;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+        return nl.contact.form.emailInvalid;
+      }
+      return undefined;
+    })();
 
-    if (!formData.name.trim()) {
-      newErrors.name = nl.contact.form.nameRequired;
-    }
-
-    if (!formData.email.trim()) {
-      newErrors.email = nl.contact.form.emailRequired;
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = nl.contact.form.emailInvalid;
-    }
-
-    if (!formData.subject.trim()) {
-      newErrors.subject = nl.contact.form.subjectRequired;
-    }
-    if (!formData.message.trim()) {
-      newErrors.message = nl.contact.form.messageRequired;
-    }
-    if (shouldRenderTurnstile && !turnstileToken) {
-      newErrors.turnstile = nl.contact.form.turnstileRequired;
-    }
+    const newErrors: FormErrors = {
+      ...(!formData.name.trim() ? { name: nl.contact.form.nameRequired } : {}),
+      ...(emailError ? { email: emailError } : {}),
+      ...(!formData.subject.trim()
+        ? { subject: nl.contact.form.subjectRequired }
+        : {}),
+      ...(!formData.message.trim()
+        ? { message: nl.contact.form.messageRequired }
+        : {}),
+      ...(shouldRenderTurnstile && !turnstileToken
+        ? { turnstile: nl.contact.form.turnstileRequired }
+        : {}),
+    };
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (!validateForm()) {
@@ -154,7 +157,11 @@ export function ContactForm() {
       </GoldgettersCardHeader>
 
       <GoldgettersCardContent>
-        <form onSubmit={handleSubmit}>
+        <form
+          onSubmit={(event) => {
+            void handleSubmit(event);
+          }}
+        >
           <GoldgettersStack gap="lg">
             <FieldGroup>
               <GoldgettersGrid gap="md" columns="twoSm">

@@ -1,6 +1,12 @@
 'use client';
 
-import { useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
+import {
+  useEffect,
+  useRef,
+  useImperativeHandle,
+  forwardRef,
+  type ForwardedRef,
+} from 'react';
 
 declare global {
   interface Window {
@@ -35,99 +41,125 @@ interface TurnstileProps {
   theme?: 'light' | 'dark' | 'auto';
 }
 
-export const Turnstile = forwardRef<TurnstileRef, TurnstileProps>(
-  (
-    {
-      siteKey,
-      onVerify,
-      onError,
-      onExpire,
-      onReady,
-      onLoadError,
-      theme = 'auto',
+const widgetIds = new WeakMap<HTMLDivElement, string>();
+
+function TurnstileRender(
+  {
+    siteKey,
+    onVerify,
+    onError,
+    onExpire,
+    onReady,
+    onLoadError,
+    theme = 'auto',
+  }: TurnstileProps,
+  ref: ForwardedRef<TurnstileRef>,
+) {
+  const turnstileRef = useRef<HTMLDivElement>(null);
+
+  const getWidgetId = () => {
+    const element = turnstileRef.current;
+    if (!element) {
+      return '';
+    }
+    return widgetIds.get(element) ?? '';
+  };
+
+  const setWidgetId = (widgetId: string) => {
+    const element = turnstileRef.current;
+    if (element) {
+      widgetIds.set(element, widgetId);
+    }
+  };
+
+  const clearWidgetId = () => {
+    const element = turnstileRef.current;
+    if (element) {
+      widgetIds.delete(element);
+    }
+  };
+
+  useImperativeHandle(ref, () => ({
+    reset: () => {
+      const widgetId = getWidgetId();
+      if (widgetId && window.turnstile) {
+        window.turnstile.reset(widgetId);
+      }
     },
-    ref,
-  ) => {
-    const turnstileRef = useRef<HTMLDivElement>(null);
-    const widgetIdRef = useRef<string>('');
+  }));
 
-    useImperativeHandle(ref, () => ({
-      reset: () => {
-        if (widgetIdRef.current && window.turnstile) {
-          window.turnstile.reset(widgetIdRef.current);
+  useEffect(() => {
+    if (!siteKey) {
+      return;
+    }
+
+    const scriptId = 'cloudflare-turnstile-script';
+    const existingScript = document.getElementById(scriptId);
+    const script: HTMLScriptElement | null =
+      existingScript instanceof HTMLScriptElement ? existingScript : null;
+
+    const renderWidget = () => {
+      if (turnstileRef.current && window.turnstile) {
+        // If a widget already exists, remove it first (cleanup)
+        const currentWidgetId = getWidgetId();
+        if (currentWidgetId) {
+          window.turnstile.remove(currentWidgetId);
         }
-      },
-    }));
 
-    useEffect(() => {
-      if (!siteKey) {
-        return;
-      }
-
-      const scriptId = 'cloudflare-turnstile-script';
-      let script = document.getElementById(scriptId) as HTMLScriptElement;
-
-      const renderWidget = () => {
-        if (turnstileRef.current && window.turnstile) {
-          // If a widget already exists, remove it first (cleanup)
-          if (widgetIdRef.current) {
-            window.turnstile.remove(widgetIdRef.current);
-          }
-
-          widgetIdRef.current = window.turnstile.render(turnstileRef.current, {
-            sitekey: siteKey,
-            callback: onVerify,
-            'error-callback': onError,
-            'expired-callback': onExpire,
-            theme,
-          });
-          onReady?.();
-        } else {
-          onLoadError?.();
-        }
-      };
-
-      if (!script) {
-        script = document.createElement('script');
-        script.id = scriptId;
-        script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
-        script.async = true;
-        script.defer = true;
-        script.onload = renderWidget;
-        script.onerror = onLoadError ?? null;
-        document.body.appendChild(script);
-      } else if (window.turnstile) {
-        // If script is already loaded
-        renderWidget();
+        const widgetId = window.turnstile.render(turnstileRef.current, {
+          sitekey: siteKey,
+          callback: onVerify,
+          'error-callback': onError,
+          'expired-callback': onExpire,
+          theme,
+        });
+        setWidgetId(widgetId);
+        onReady?.();
       } else {
-        // Script exists but maybe not fully loaded, add listener
-        // (Note: simplest way is usually to trust the existing script onload,
-        // but if multiple components use it, we might need a more robust loader.
-        // For now, simpler is better given the likely single usage).
-        // If window.turnstile is missing but script exists, it might be loading.
-        // We can just poll or hook into onload if possible, but let's assume
-        // standard flow for now.
-        const originalOnLoad = script.onload;
-        script.onload = (event) => {
-          if (typeof originalOnLoad === 'function') {
-            originalOnLoad.call(script, event);
-          }
-          renderWidget();
-        };
+        onLoadError?.();
       }
+    };
 
-      return () => {
-        if (widgetIdRef.current && window.turnstile) {
-          window.turnstile.remove(widgetIdRef.current);
-          widgetIdRef.current = '';
+    if (!script) {
+      const createdScript = document.createElement('script');
+      createdScript.setAttribute('id', scriptId);
+      createdScript.setAttribute(
+        'src',
+        'https://challenges.cloudflare.com/turnstile/v0/api.js',
+      );
+      createdScript.setAttribute('async', '');
+      createdScript.setAttribute('defer', '');
+      createdScript.addEventListener('load', renderWidget);
+      if (onLoadError) {
+        createdScript.addEventListener('error', onLoadError);
+      }
+      document.body.appendChild(createdScript);
+    } else if (window.turnstile) {
+      // If script is already loaded
+      renderWidget();
+    } else {
+      // Script exists but maybe not fully loaded, add listener
+      script.addEventListener('load', renderWidget);
+    }
+
+    return () => {
+      const widgetId = getWidgetId();
+      if (widgetId && window.turnstile) {
+        window.turnstile.remove(widgetId);
+        clearWidgetId();
+      }
+      if (script) {
+        script.removeEventListener('load', renderWidget);
+        if (onLoadError) {
+          script.removeEventListener('error', onLoadError);
         }
-        // We don't remove the script tag to avoid breaking other instances if any,
-        // or re-loading penalties.
-      };
-    }, [siteKey, theme, onVerify, onError, onExpire, onReady, onLoadError]);
+      }
+    };
+  }, [siteKey, theme, onVerify, onError, onExpire, onReady, onLoadError]);
 
-    return <div ref={turnstileRef} />;
-  },
+  return <div ref={turnstileRef} />;
+}
+
+export const Turnstile = forwardRef<TurnstileRef, TurnstileProps>(
+  TurnstileRender,
 );
-
-Turnstile.displayName = 'Turnstile';

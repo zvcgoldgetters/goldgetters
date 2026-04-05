@@ -6,7 +6,7 @@ import { serverEnv } from '@/lib/env/server';
 
 async function post(request: Request) {
   try {
-    const payload = await request.json();
+    const payload: unknown = await request.json();
     const { data, error } = validateContactPayload(payload);
 
     if (!data) {

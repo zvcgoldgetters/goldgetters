@@ -2,6 +2,8 @@ import nodemailer from 'nodemailer';
 import { serverEnv, isSmtpConfigured } from '@/lib/env/server';
 import type { ContactFormData } from '@/features/contact/schema';
 
+const SMTP_TLS_PORT = 465;
+
 function escapeHtml(value: string): string {
   return value
     .replaceAll('&', '&amp;')
@@ -21,7 +23,7 @@ export async function sendContactEmail(
   const transporter = nodemailer.createTransport({
     host: serverEnv.smtpHost,
     port: serverEnv.smtpPort,
-    secure: serverEnv.smtpPort === 465,
+    secure: serverEnv.smtpPort === SMTP_TLS_PORT,
     auth: {
       user: serverEnv.smtpUser,
       pass: serverEnv.smtpPass,

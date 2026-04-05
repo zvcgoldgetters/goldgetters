@@ -4,6 +4,7 @@ const configuredCoverageDirs =
   process.env.COVERAGE_SOURCE_DIRS ??
   process.env.COVERAGE_SOURCE_DIR ??
   'app,components,lib,collections';
+const CI_RETRIES = 2;
 
 const coverageFilters = Object.fromEntries(
   configuredCoverageDirs
@@ -17,7 +18,7 @@ export default defineConfig({
   testDir: './e2e',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
+  retries: process.env.CI ? CI_RETRIES : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: [
     ['list'],
