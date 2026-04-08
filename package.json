@@ -19,10 +19,10 @@
     "migrate:down": "payload migrate:down"
   },
   "dependencies": {
-    "@payloadcms/db-sqlite": "3.81.0",
-    "@payloadcms/next": "3.81.0",
-    "@payloadcms/richtext-lexical": "3.81.0",
-    "@payloadcms/ui": "3.81.0",
+    "@payloadcms/db-sqlite": "3.82.0",
+    "@payloadcms/next": "3.82.0",
+    "@payloadcms/richtext-lexical": "3.82.0",
+    "@payloadcms/ui": "3.82.0",
     "@radix-ui/react-label": "^2.1.8",
     "@radix-ui/react-navigation-menu": "^1.2.14",
     "@radix-ui/react-slot": "^1.2.4",
@@ -33,7 +33,7 @@
     "lucide-react": "^0.542.0",
     "next": "^16.1.7",
     "nodemailer": "^8.0.4",
-    "payload": "3.81.0",
+    "payload": "3.82.0",
     "radix-ui": "^1.4.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
