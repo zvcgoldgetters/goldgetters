@@ -24,6 +24,7 @@
     "payload": {
       "source": "payloadcms/skills",
       "sourceType": "github",
+      "skillPath": "skills/payload/SKILL.md",
       "computedHash": "868c518cec5efe3862accee8ef3751b72fac06d7e12a27c263dc17320f27b20c"
     },
     "playwright-expert": {
