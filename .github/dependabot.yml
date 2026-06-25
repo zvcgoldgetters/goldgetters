@@ -8,6 +8,8 @@ updates:
       day: 'monday'
       time: '08:00'
       timezone: 'Europe/Brussels'
+    assignees:
+      - 'robinpellegrims'
     commit-message:
       prefix: 'deps'
       prefix-development: 'deps-dev'
@@ -103,6 +105,8 @@ updates:
       day: 'monday'
       time: '08:30'
       timezone: 'Europe/Brussels'
+    assignees:
+      - 'robinpellegrims'
     commit-message:
       prefix: 'ci'
       include: 'scope'
