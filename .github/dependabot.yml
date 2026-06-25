@@ -1,0 +1,121 @@
+version: 2
+
+updates:
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '08:00'
+      timezone: 'Europe/Brussels'
+    commit-message:
+      prefix: 'deps'
+      prefix-development: 'deps-dev'
+      include: 'scope'
+    open-pull-requests-limit: 8
+    cooldown:
+      default-days: 5
+      semver-major-days: 21
+      semver-minor-days: 7
+      semver-patch-days: 3
+    groups:
+      security-patches:
+        applies-to: security-updates
+        patterns:
+          - '*'
+        update-types:
+          - 'patch'
+          - 'minor'
+      payload-cms:
+        patterns:
+          - 'payload'
+          - '@payloadcms/*'
+        update-types:
+          - 'patch'
+          - 'minor'
+      next-react:
+        patterns:
+          - 'next'
+          - 'eslint-config-next'
+          - 'react'
+          - 'react-dom'
+          - '@types/react'
+          - '@types/react-dom'
+        update-types:
+          - 'patch'
+          - 'minor'
+      radix-ui:
+        patterns:
+          - '@radix-ui/*'
+          - 'radix-ui'
+        update-types:
+          - 'patch'
+          - 'minor'
+      styling:
+        patterns:
+          - '@tailwindcss/*'
+          - 'tailwindcss'
+          - 'tailwind-merge'
+          - 'tw-animate-css'
+          - 'class-variance-authority'
+          - 'clsx'
+        update-types:
+          - 'patch'
+          - 'minor'
+      testing:
+        dependency-type: 'development'
+        patterns:
+          - '@playwright/test'
+          - '@testing-library/*'
+          - '@vitejs/*'
+          - 'jsdom'
+          - 'monocart-reporter'
+          - 'vitest'
+        update-types:
+          - 'patch'
+          - 'minor'
+      lint-format:
+        dependency-type: 'development'
+        patterns:
+          - '@eslint/*'
+          - '@pellegrims/eslint-config-base'
+          - 'eslint'
+          - 'husky'
+          - 'lint-staged'
+          - 'prettier'
+          - 'typescript'
+        update-types:
+          - 'patch'
+          - 'minor'
+      production-patches:
+        dependency-type: 'production'
+        update-types:
+          - 'patch'
+      development-patches:
+        dependency-type: 'development'
+        update-types:
+          - 'patch'
+
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '08:30'
+      timezone: 'Europe/Brussels'
+    commit-message:
+      prefix: 'ci'
+      include: 'scope'
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 5
+      semver-major-days: 21
+      semver-minor-days: 7
+      semver-patch-days: 3
+    groups:
+      actions:
+        patterns:
+          - 'actions/*'
+        update-types:
+          - 'patch'
+          - 'minor'
