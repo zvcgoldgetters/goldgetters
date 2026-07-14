@@ -102,6 +102,17 @@ Do not commit real secrets or local database files.
 - After creating or editing migrations, run `npm run migrate` against the intended local database.
 - Payload types are emitted to `payload-types.ts`; avoid manual edits unless there is no generator-backed alternative.
 
+## Drupal Migration Notes
+
+- The durable migration specification lives in `docs/migration/README.md` and its linked documents.
+- Keep Drupal as the source of truth until the documented cutover; imports must be repeatable and non-destructive by default.
+- Preserve stable Drupal source identifiers and produce dry-run/reconciliation reports for importer changes.
+- Do not commit Drupal SQL/files exports, credentials, password hashes, invitation tokens, local filesystem paths, or other sensitive source data.
+- Treat `docs/migration/roadmap.md` as the milestone backlog and GitHub issues as the execution tracker.
+- Do not recreate the generic Drupal Views engine; implement selected public Views as purpose-built Payload queries and frontend components.
+- RSVP changes must preserve secure invitation links, player/member access, organizer dashboards, role restrictions, and private response data.
+- Schema and importer changes require appropriate tests and migrations; update the migration documentation when a decision or scope changes.
+
 ## CI and Quality Gates
 
 CI runs on pushes and pull requests targeting `main`.
