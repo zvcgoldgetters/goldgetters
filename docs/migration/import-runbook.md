@@ -38,3 +38,7 @@
 4. Run the final delta import.
 5. Run relationship, URL, permission, media, and frontend checks.
 6. Switch traffic and retain Drupal read-only for rollback.
+
+For ownership, backup evidence, the Drupal read-only procedure, rollback
+triggers, and recovery checks, follow [Backup, rollback, and recovery
+plan](backup-and-rollback.md).
