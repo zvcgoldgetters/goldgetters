@@ -8,10 +8,25 @@
 - Upsert creates and updates; it does not silently delete.
 - Produce an audit report for every run.
 - Keep source and target databases private.
+- Require a validated export manifest before reading any source artifact.
+
+## Preflight contract
+
+1. Select the target environment (`local`, `development`, `staging`, or
+   `production`) and load the private importer configuration.
+2. Verify that every source artifact named by the configuration exists in the
+   private migration workspace.
+3. Recompute each artifact's byte count and SHA-256 checksum and compare it to
+   the immutable export manifest. Abort on mismatch.
+4. Confirm that credentials are available through the runtime environment or
+   secret manager, not through the config file or source export.
+5. For production, obtain a reviewed dry-run report and confirm the backup and
+   rollback owner before enabling writes.
 
 ## Import phases
 
-1. Validate source dump/archive and record the export timestamp.
+1. Validate source dump/archive against the export manifest and record the
+   export timestamp.
 2. Import reference data: users, players, teams, venues, leagues, and seasons.
 3. Import media referenced by migrated content.
 4. Import matches and generic team events.
@@ -28,6 +43,8 @@
 - Media is deduplicated by source path and checksum.
 - Unresolved references are reported and retained for later repair.
 - Each run records source timestamp, target environment, counts, warnings, and errors.
+- Each run references the immutable manifest ID and records the importer version,
+  run ID, start/finish timestamps, and dry-run status.
 - A final import can optionally mark records missing from Drupal as archived after review.
 
 ## Cutover
