@@ -8,7 +8,10 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     exclude: ['**/node_modules/**', '**/e2e/**', '**/.git/**'],
-    passWithNoTests: true,
+    reporter: process.env.CI ? ['default', 'junit'] : 'default',
+    outputFile: {
+      junit: 'test-results/vitest.xml',
+    },
   },
   resolve: {
     alias: {
