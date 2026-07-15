@@ -53,3 +53,8 @@ payload.db
 payload.db-journal
 payload-types.ts
 /media
+
+# Drupal migration inputs, completed manifests, and reports
+/migration-private/
+/migration-reports/
+/docs/migration/export-manifest.json
