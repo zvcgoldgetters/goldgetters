@@ -6,7 +6,7 @@
 - Keep migration decisions and generated inventories in `docs/migration/`.
 - Define the source export format, export timestamp, target environment, and importer configuration format.
 - Define the policy for sensitive data, local files, secrets, and generated artifacts.
-- Define rollback, backup, and recovery ownership before production work begins.
+- Define rollback, backup, and recovery ownership before production work begins. See [Backup, rollback, and recovery plan](backup-and-rollback.md).
 
 ## M1 - Source inventory
 

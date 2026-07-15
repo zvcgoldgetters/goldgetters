@@ -41,4 +41,5 @@ See the linked documents in this directory for the detailed backlog and decision
 - [RSVP design](rsvp.md)
 - [URLs and Views](urls-and-views.md)
 - [Repeatable import runbook](import-runbook.md)
+- [Backup, rollback, and recovery plan](backup-and-rollback.md)
 - [Roadmap and task backlog](roadmap.md)
