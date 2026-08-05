@@ -39,6 +39,12 @@ We will not recreate a generic Views engine. Each useful public View becomes a p
 
 ## URL manifest
 
+The repeatable generator in `scripts/migration/url_manifest.py` combines the
+private SQL export with an optional sanitized live-crawl JSON. It writes a
+deterministic manifest and never writes SQL row values, credentials, tokens, or
+crawl response bodies. Keep the generated file outside Git with the private
+exports.
+
 Create a generated `legacy-url-manifest.json` containing, for every discovered URL:
 
 - legacy path and query parameters
