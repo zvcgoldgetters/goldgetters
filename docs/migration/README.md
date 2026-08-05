@@ -35,6 +35,7 @@ Local paths and credentials are intentionally excluded from this documentation.
 See the linked documents in this directory for the detailed backlog and decisions.
 
 - [Source inventory snapshot](source-inventory.md)
+- [Generated content and field mapping](content-field-mapping.md)
 - [Migration configuration and security contract](configuration.md)
 - [Export manifest template](export-manifest.example.json)
 - [Migration decisions](decisions.md)

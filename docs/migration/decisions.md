@@ -32,7 +32,7 @@
 ## Exclusions
 
 - Drupal forum content
-- All 28 Drupal comments
+- All 557 Drupal comments from the current export
 - Klassement records and prediction/rating/chart features
 - `ndmt_wedstrijd` league-wide imported matches
 - Drupal revision history; each node has one revision in the dump

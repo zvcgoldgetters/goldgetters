@@ -5,7 +5,8 @@ non-sensitive JSON report containing:
 
 - SHA-256 and byte size for each export;
 - relevant Drupal table schemas and row counts;
-- field storage table names;
+- field definitions, bundle instances, and a joined content-type/field mapping;
+- foreign-key-like reference candidates grouped by target;
 - archive file counts, byte totals, categories, and extensions.
 
 It does not write SQL values, credentials, password hashes, invitation tokens,
