@@ -40,6 +40,7 @@ See the linked documents in this directory for the detailed backlog and decision
 - [Export manifest template](export-manifest.example.json)
 - [Migration decisions](decisions.md)
 - [RSVP design](rsvp.md)
+- [RSVP, custom PHP, and dynamic route inventory](rsvp-custom-php-inventory.md)
 - [URLs and Views](urls-and-views.md)
 - [Repeatable import runbook](import-runbook.md)
 - [Backup, rollback, and recovery plan](backup-and-rollback.md)
