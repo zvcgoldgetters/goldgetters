@@ -424,6 +424,109 @@ def classify_archive_member(name: str) -> str:
     return "source_candidate"
 
 
+def archive_members(path: Path) -> dict[str, str]:
+    with tarfile.open(path, mode="r:gz") as archive:
+        return {
+            member.name: classify_archive_member(member.name)
+            for member in archive
+            if not member.isdir()
+        }
+
+
+def archive_path_for_uri(uri: str, members: dict[str, str]) -> str | None:
+    if "://" not in uri:
+        return None
+    scheme, relative = uri.split("://", 1)
+    relative = relative.lstrip("/")
+    prefixes = {
+        "public": ("files/", "sites/default/files/", "public/"),
+        "private": ("private/", "sites/default/private/"),
+        "temporary": ("temporary/",),
+    }.get(scheme, (f"{scheme}/",))
+    for prefix in prefixes:
+        candidate = f"{prefix}{relative}"
+        if candidate in members:
+            return candidate
+    suffix = f"/files/{relative}"
+    return next((name for name in members if name.endswith(suffix)), None)
+
+
+def file_references(dump: str, tables: dict[str, dict]) -> list[dict[str, int | str]]:
+    references: list[dict[str, int | str]] = []
+    for table, definition in tables.items():
+        if table == "file_managed":
+            continue
+        columns = [column["name"] for column in definition["columns"]]
+        file_columns = [column for column in columns if column.lower().endswith("_fid")]
+        if not file_columns or "entity_id" not in columns:
+            continue
+        for row in selected_rows(dump, table, columns):
+            entity_id = row.get("entity_id")
+            if not isinstance(entity_id, int):
+                continue
+            for column in file_columns:
+                fid = row.get(column)
+                if isinstance(fid, int) and fid:
+                    references.append(
+                        {
+                            "fid": fid,
+                            "table": table,
+                            "column": column,
+                            "entity_id": entity_id,
+                        }
+                    )
+    return sorted(references, key=lambda row: (int(row["fid"]), str(row["table"]), int(row["entity_id"])))
+
+
+def media_inventory(dump: str, archive_path: Path, tables: dict[str, dict]) -> dict:
+    members = archive_members(archive_path)
+    references = file_references(dump, tables)
+    by_fid: dict[int, list[dict[str, int | str]]] = {}
+    for reference in references:
+        by_fid.setdefault(int(reference["fid"]), []).append(
+            {key: value for key, value in reference.items() if key != "fid"}
+        )
+
+    managed = selected_rows(
+        dump,
+        "file_managed",
+        ["fid", "uid", "filename", "uri", "filemime", "filesize", "status", "timestamp"],
+        ["fid", "filename", "uri", "filemime", "filesize", "status"],
+    )
+    managed_files = []
+    managed_ids: set[int] = set()
+    for row in managed:
+        fid = row.get("fid")
+        if not isinstance(fid, int):
+            continue
+        managed_ids.add(fid)
+        archive_path_value = archive_path_for_uri(str(row["uri"]), members)
+        managed_files.append(
+            {
+                "fid": fid,
+                "filename": row["filename"],
+                "uri": row["uri"],
+                "filemime": row["filemime"],
+                "filesize": row["filesize"],
+                "status": row["status"],
+                "archive_path": archive_path_value,
+                "archive_present": archive_path_value is not None,
+                "archive_category": members.get(archive_path_value) if archive_path_value else None,
+                "references": by_fid.get(fid, []),
+            }
+        )
+
+    return {
+        "managed_files": sorted(managed_files, key=lambda row: int(row["fid"])),
+        "missing_archive_files": sorted(
+            int(row["fid"]) for row in managed_files if not row["archive_present"]
+        ),
+        "dangling_file_references": [
+            reference for reference in references if int(reference["fid"]) not in managed_ids
+        ],
+    }
+
+
 def archive_inventory(path: Path) -> dict:
     categories = Counter()
     extensions = Counter()
@@ -449,10 +552,17 @@ def archive_inventory(path: Path) -> dict:
 
 
 def build_report(sql_path: Path, archive_path: Path) -> dict:
+    with gzip.open(sql_path, "rt", encoding="utf-8", errors="replace") as source:
+        dump = source.read()
+    sql = sql_inventory(sql_path)
     return {
         "schema_version": 1,
-        "sql_export": {"path": sql_path.name, **sql_inventory(sql_path)},
-        "files_export": {"path": archive_path.name, **archive_inventory(archive_path)},
+        "sql_export": {"path": sql_path.name, **sql},
+        "files_export": {
+            "path": archive_path.name,
+            **archive_inventory(archive_path),
+            **media_inventory(dump, archive_path, sql["tables"]),
+        },
     }
 
 
