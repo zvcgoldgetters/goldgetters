@@ -28,6 +28,13 @@ Views configurations are serialized in `views_display.display_options`. They con
 - block descriptions and display placement
 - custom PHP filters or output
 
+The migration inventory script records every View and display identity plus
+the serialized option keys present, without copying option values into the
+report. This gives the migration team a complete classification index while
+keeping source content, paths, and other export values out of generated
+artifacts. A follow-up decoder can use the private export to classify each
+display into page, block, feed, calendar, member, or administration scope.
+
 We will not recreate a generic Views engine. Each useful public View becomes a purpose-built Payload query and frontend component. Obsolete, admin-only, or redundant Views are excluded.
 
 ## URL manifest

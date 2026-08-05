@@ -5,7 +5,7 @@ import unittest
 from io import BytesIO
 from pathlib import Path
 
-from inventory import build_field_mapping, build_report, count_value_tuples, reference_target
+from inventory import build_field_mapping, build_report, count_value_tuples, reference_target, views_inventory
 
 
 SQL = """CREATE TABLE `node` (
@@ -22,6 +22,25 @@ INSERT INTO `node` (`nid`, `type`) VALUES
 (1,'article'),
 (2,'page');
 INSERT INTO `field_data_field_title` VALUES (1,'A title with (parentheses; and semicolon)');
+CREATE TABLE `views_view` (
+  `vid` int(10) unsigned NOT NULL,
+  `name` varchar(128) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `tag` varchar(80) NOT NULL,
+  `base_table` varchar(128) NOT NULL,
+  `human_name` varchar(255) NOT NULL,
+  `core` int(10) NOT NULL
+) ENGINE=InnoDB;
+CREATE TABLE `views_display` (
+  `vid` int(10) unsigned NOT NULL,
+  `id` varchar(64) NOT NULL,
+  `display_plugin` varchar(64) NOT NULL,
+  `position` int(10) NOT NULL,
+  `display_title` varchar(255) NOT NULL,
+  `display_options` longtext NOT NULL
+) ENGINE=InnoDB;
+INSERT INTO `views_view` VALUES (1,'news','Private description','default','node','News','7');
+INSERT INTO `views_display` VALUES (1,'page_1','page',0,'News page','a:2:{s:4:"path";s:10:"news";s:7:"access";a:0:{}}');
 """
 
 
@@ -95,6 +114,14 @@ class InventoryTests(unittest.TestCase):
     def test_reference_target_identifies_drupal_foreign_key_conventions(self):
         self.assertEqual(reference_target("field_data_field_logo", "field_logo_fid")[0], "file_managed.fid")
         self.assertEqual(reference_target("field_data_field_title", "entity_id")[0], "node.nid")
+
+    def test_views_inventory_keeps_metadata_but_not_serialized_values(self):
+        views = views_inventory(SQL)
+        self.assertEqual(views["view_count"], 1)
+        self.assertEqual(views["display_count"], 1)
+        self.assertEqual(views["displays"][0]["display_plugin"], "page")
+        self.assertIn("path", views["displays"][0]["display_options_keys"])
+        self.assertNotIn("news", json.dumps(views["displays"][0]["display_options_keys"]))
 
     def test_report_is_json_serializable(self):
         from tempfile import TemporaryDirectory
