@@ -10,6 +10,25 @@ This is a snapshot of the inspected Drupal export. Counts should be rechecked ag
 - The export contains approximately 584 booking records, 586 own `wedstrijd` records, 597 deferred `ndmt_wedstrijd` records, 5,798 `wedstrijdverloop` events, 558 RSVP events, and 13,826 RSVP invitation/response records.
 - The media archive contains 2,630 files, including generated styles and cache assets; migrate only referenced managed files and ignore generated derivatives.
 
+## Media inventory
+
+Run the inventory command with the private Drupal SQL dump and files archive:
+
+```bash
+python3 scripts/migration/inventory.py \
+  --sql /path/to/drupal.sql.gz \
+  --files /path/to/files.tar.gz \
+  --output /tmp/goldgetters-inventory.json
+```
+
+The `files_export.managed_files` records map each Drupal `file_managed.fid` and
+URI to the matching archive path, classify generated/cache members, and list
+referencing entity/table/field records. The report also includes
+`missing_archive_files` for managed files absent from the archive and
+`dangling_file_references` for field references without a `file_managed` row.
+The report is intended for local reconciliation and must not be committed when
+it contains paths from a private export.
+
 ## Player roster facts
 
 The current core/reserve distinction is stored on Drupal users in `field_data_field_gebruiker_reserve`, not in a season model. The seven core players identified in the export are Bjorn, Jeroen, Nick, Ken, Nils, Dieter, and Robin. Reserve players remain separate records and can be added to individual events.

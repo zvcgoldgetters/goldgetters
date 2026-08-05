@@ -41,6 +41,26 @@ CREATE TABLE `views_display` (
 ) ENGINE=InnoDB;
 INSERT INTO `views_view` VALUES (1,'news','Private description','default','node','News','7');
 INSERT INTO `views_display` VALUES (1,'page_1','page',0,'News page','a:2:{s:4:"path";s:10:"news";s:7:"access";a:0:{}}');
+CREATE TABLE `file_managed` (
+  `fid` int(10) unsigned NOT NULL,
+  `uid` int(10) unsigned NOT NULL,
+  `filename` varchar(255) NOT NULL,
+  `uri` varchar(255) NOT NULL,
+  `filemime` varchar(255) NOT NULL,
+  `filesize` int(10) unsigned NOT NULL,
+  `status` tinyint(4) NOT NULL,
+  `timestamp` int(11) NOT NULL
+) ENGINE=InnoDB;
+INSERT INTO `file_managed` VALUES
+(10,1,'photo.jpg','public://images/photo.jpg','image/jpeg',5,1,1),
+(11,1,'missing.jpg','public://images/missing.jpg','image/jpeg',7,1,1);
+CREATE TABLE `field_data_field_image` (
+  `entity_type` varchar(255) NOT NULL,
+  `entity_id` int(10) NOT NULL,
+  `field_image_fid` int(10) NOT NULL,
+  `delta` int(10) NOT NULL
+) ENGINE=InnoDB;
+INSERT INTO `field_data_field_image` VALUES ('node',1,10,0),('node',2,11,0),('node',3,99,0);
 """
 
 
@@ -129,6 +149,24 @@ class InventoryTests(unittest.TestCase):
         with TemporaryDirectory() as directory:
             sql_path, archive_path = create_exports(Path(directory))
             json.dumps(build_report(sql_path, archive_path))
+
+    def test_media_inventory_maps_managed_files_and_reports_missing_references(self):
+        from tempfile import TemporaryDirectory
+
+        with TemporaryDirectory() as directory:
+            sql_path, archive_path = create_exports(Path(directory))
+            report = build_report(sql_path, archive_path)
+
+        files = report["files_export"]["managed_files"]
+        self.assertEqual(files[0]["fid"], 10)
+        self.assertEqual(files[0]["archive_path"], "files/images/photo.jpg")
+        self.assertTrue(files[0]["archive_present"])
+        self.assertEqual(files[0]["references"][0]["entity_id"], 1)
+        self.assertEqual(report["files_export"]["missing_archive_files"], [11])
+        self.assertEqual(
+            report["files_export"]["dangling_file_references"],
+            [{"fid": 99, "table": "field_data_field_image", "column": "field_image_fid", "entity_id": 3}],
+        )
 
 
 if __name__ == "__main__":
