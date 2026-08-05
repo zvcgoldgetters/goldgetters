@@ -8,7 +8,7 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     exclude: ['**/node_modules/**', '**/e2e/**', '**/.git/**'],
-    reporter: process.env.CI ? ['default', 'junit'] : 'default',
+    reporters: process.env.CI ? ['default', 'junit'] : 'default',
     outputFile: {
       junit: 'test-results/vitest.xml',
     },
