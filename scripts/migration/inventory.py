@@ -225,6 +225,42 @@ def selected_rows(
     return rows
 
 
+def views_inventory(dump: str) -> dict:
+    """Extract safe Views metadata without copying serialized configuration.
+
+    Drupal stores filters, fields, relationships, access rules, paths, and
+    block placement in ``views_display.display_options``.  Those values are
+    intentionally not decoded here because the export may contain source
+    content or credentials.  The report records the display identity and the
+    configuration keys present, which is enough to plan a follow-up decoder.
+    """
+    view_rows = selected_rows(
+        dump,
+        "views_view",
+        ["vid", "name", "description", "tag", "base_table", "human_name", "core"],
+    )
+    display_rows = selected_rows(
+        dump,
+        "views_display",
+        ["vid", "id", "display_plugin", "position", "display_title", "display_options"],
+    )
+
+    displays = []
+    for row in display_rows:
+        options = row.pop("display_options", None)
+        option_keys = sorted(
+            set(re.findall(r"(?:^|[;{])s:\d+:\"([^\"]+)\";", options or ""))
+        )
+        displays.append({**row, "display_options_keys": option_keys})
+
+    return {
+        "view_count": len(view_rows),
+        "display_count": len(displays),
+        "views": view_rows,
+        "displays": displays,
+    }
+
+
 def reference_target(table: str, column: str) -> tuple[str, str] | None:
     name = column.lower()
     if name == "entity_id" and table.startswith("field_"):
@@ -375,6 +411,7 @@ def sql_inventory(path: Path) -> dict:
         "field_mapping": field_mapping,
         "reference_candidates": reference_candidates(tables),
         "node_types": node_types,
+        "views": views_inventory(dump),
     }
 
 
