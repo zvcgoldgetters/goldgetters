@@ -12,6 +12,22 @@ non-sensitive JSON report containing:
 It does not write SQL values, credentials, password hashes, invitation tokens,
 file paths, or archive contents to the report.
 
+Generate the legacy URL manifest from the private SQL export and an optional
+sanitized live crawl. The manifest is deterministic and contains paths,
+provenance, expected status/access metadata, redirect flags, and migration
+status; keep it outside Git with the source exports:
+
+```bash
+python3 scripts/migration/url_manifest.py \\
+  --sql /path/to/mysql.sql.gz \\
+  --crawl /path/to/crawl.json \\
+  --output /private/path/legacy-url-manifest.json
+```
+
+The crawl JSON may be a list of objects or `{\"urls\": [...]}`. Each object
+uses `path` (or `url`), optional `status`, `access_level`, and
+`query_parameters` fields.
+
 Run it from the repository root:
 
 ```bash
