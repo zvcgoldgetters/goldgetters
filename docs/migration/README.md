@@ -41,6 +41,7 @@ See the linked documents in this directory for the detailed backlog and decision
 - [Migration decisions](decisions.md)
 - [Roles and access policy](roles-and-access.md)
 - [RSVP design](rsvp.md)
+- [RSVP, custom PHP, and dynamic route inventory](rsvp-custom-php-inventory.md)
 - [URLs and Views](urls-and-views.md)
 - [Repeatable import runbook](import-runbook.md)
 - [Backup, rollback, and recovery plan](backup-and-rollback.md)
