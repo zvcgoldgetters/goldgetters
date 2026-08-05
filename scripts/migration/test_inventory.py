@@ -5,7 +5,7 @@ import unittest
 from io import BytesIO
 from pathlib import Path
 
-from inventory import build_report, count_value_tuples
+from inventory import build_field_mapping, build_report, count_value_tuples, reference_target
 
 
 SQL = """CREATE TABLE `node` (
@@ -65,6 +65,36 @@ class InventoryTests(unittest.TestCase):
         self.assertEqual(report["files_export"]["file_count"], 2)
         self.assertEqual(report["files_export"]["categories"]["generated_or_cache"], 1)
         self.assertEqual(report["files_export"]["extensions"][".jpg"], 2)
+
+    def test_field_mapping_joins_definitions_to_bundles(self):
+        mapping = build_field_mapping(
+            [
+                {
+                    "id": 1,
+                    "field_name": "field_logo",
+                    "type": "image",
+                    "module": "image",
+                    "cardinality": 1,
+                    "translatable": 0,
+                    "deleted": 0,
+                }
+            ],
+            [
+                {
+                    "field_id": 1,
+                    "field_name": "field_logo",
+                    "entity_type": "node",
+                    "bundle": "team",
+                    "deleted": 0,
+                }
+            ],
+        )
+        self.assertEqual(mapping[0]["bundle"], "team")
+        self.assertEqual(mapping[0]["type"], "image")
+
+    def test_reference_target_identifies_drupal_foreign_key_conventions(self):
+        self.assertEqual(reference_target("field_data_field_logo", "field_logo_fid")[0], "file_managed.fid")
+        self.assertEqual(reference_target("field_data_field_title", "entity_id")[0], "node.nid")
 
     def test_report_is_json_serializable(self):
         from tempfile import TemporaryDirectory
