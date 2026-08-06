@@ -14,14 +14,18 @@ describe('Payload schema setup', () => {
     expect(Users.slug).toBe('users');
     expect(Users.auth).toBe(true);
 
-    const roleField = Users.fields.find((field) => field.name === 'role');
+    const roleField = Users.fields.find(
+      (field) => 'name' in field && field.name === 'role',
+    );
     expect(roleField).toMatchObject({
       name: 'role',
       type: 'select',
       required: true,
       defaultValue: 'member',
     });
-    expect(roleField && 'options' in roleField ? roleField.options : []).toEqual([
+    expect(
+      roleField && 'options' in roleField ? roleField.options : [],
+    ).toEqual([
       { label: 'administrator', value: 'administrator' },
       { label: 'editor', value: 'editor' },
       { label: 'finance', value: 'finance' },
