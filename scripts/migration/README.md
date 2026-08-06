@@ -39,8 +39,15 @@ python3 scripts/migration/inventory.py \
 
 Keep the generated report and source exports outside Git. The parser is
 intentionally limited to inventory metadata; it is not a Drupal importer.
-Run its standard-library tests with:
+The repository also includes a sanitized record fixture and deterministic
+regression tests for importer adapters. The fixture covers a successful
+relationship, a missing reference, creates, updates, reruns, and idempotency.
+It contains no Drupal export data or credentials:
 
 ```bash
 python3 scripts/migration/test_inventory.py -v
+python3 scripts/migration/test_fixture_tools.py -v
 ```
+`fixture_tools.py` is intentionally independent of Payload. Importer
+implementations can consume its `FixtureRecord` contract while exercising dry
+runs before connecting a real source adapter.
