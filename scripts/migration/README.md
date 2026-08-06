@@ -37,9 +37,20 @@ python3 scripts/migration/inventory.py \
   --output /private/path/goldgetters-source-inventory.json
 ```
 
-Keep the generated report and source exports outside Git. The parser is
-intentionally limited to inventory metadata; it is not a Drupal importer.
-Run its standard-library tests with:
+Keep the generated report and source exports outside Git. The inventory
+parser is intentionally limited to metadata; it is not a Drupal importer.
+The repeatable importer foundation validates private artifact manifests, reads
+normalized JSON/JSONL records, and produces dry-run/reconciliation reports:
+
+```bash
+python3 scripts/migration/importer.py \\
+  --config /private/migration/import-config.json \\
+  --dry-run
+```
+
+See [Migration configuration and security contract](configuration.md) for the
+private configuration schema and apply procedure. Run its standard-library
+tests with:
 
 ```bash
 python3 scripts/migration/test_inventory.py -v
