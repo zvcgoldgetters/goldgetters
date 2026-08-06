@@ -3,6 +3,11 @@ import { fileURLToPath } from 'url';
 import { buildConfig } from 'payload';
 import { sqliteAdapter } from '@payloadcms/db-sqlite';
 import { lexicalEditor } from '@payloadcms/richtext-lexical';
+import { MatchEvents } from './payload/collections/MatchEvents';
+import { Matches } from './payload/collections/Matches';
+import { PlayerAppearances } from './payload/collections/PlayerAppearances';
+import { Players } from './payload/collections/Players';
+import { Seasons } from './payload/collections/Seasons';
 import { Users } from './payload/collections/Users';
 import { serverEnv } from './lib/env/server';
 
@@ -31,7 +36,14 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users],
+  collections: [
+    Users,
+    Seasons,
+    Matches,
+    Players,
+    MatchEvents,
+    PlayerAppearances,
+  ],
   editor: lexicalEditor(),
   graphQL: {
     disable: true,
