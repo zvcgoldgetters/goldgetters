@@ -39,6 +39,7 @@ See the linked documents in this directory for the detailed backlog and decision
 - [Migration configuration and security contract](configuration.md)
 - [Export manifest template](export-manifest.example.json)
 - [Migration decisions](decisions.md)
+- [Roles and access policy](roles-and-access.md)
 - [RSVP design](rsvp.md)
 - [URLs and Views](urls-and-views.md)
 - [Repeatable import runbook](import-runbook.md)
