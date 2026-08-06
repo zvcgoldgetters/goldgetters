@@ -18,9 +18,7 @@ invitation tokens, or source record values.
       "sha256": "<64 hexadecimal characters>"
     }
   ],
-  "collections": [
-    {"name": "users", "path": "/private/migration/users.json"}
-  ],
+  "collections": [{ "name": "users", "path": "/private/migration/users.json" }],
   "state_path": "/private/migration/state.json",
   "report_path": "/private/migration/reports/latest.json"
 }
