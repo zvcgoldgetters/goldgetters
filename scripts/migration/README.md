@@ -48,6 +48,7 @@ It contains no Drupal export data or credentials:
 python3 scripts/migration/test_inventory.py -v
 python3 scripts/migration/test_fixture_tools.py -v
 ```
+
 `fixture_tools.py` is intentionally independent of Payload. Importer
 implementations can consume its `FixtureRecord` contract while exercising dry
 runs before connecting a real source adapter.

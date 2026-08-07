@@ -5,21 +5,21 @@
       "source_id": "team:1",
       "changed_at": "2026-01-01T00:00:00Z",
       "entity": "teams",
-      "data": {"name": "Goldgetters"},
+      "data": { "name": "Goldgetters" },
       "references": []
     },
     {
       "source_id": "user:1",
       "changed_at": "2026-01-01T00:00:00Z",
       "entity": "users",
-      "data": {"display_name": "Robin", "team_id": "team:1"},
+      "data": { "display_name": "Robin", "team_id": "team:1" },
       "references": ["team:1"]
     },
     {
       "source_id": "user:2",
       "changed_at": "2026-01-02T00:00:00Z",
       "entity": "users",
-      "data": {"display_name": "Sam", "team_id": "team:missing"},
+      "data": { "display_name": "Sam", "team_id": "team:missing" },
       "references": ["team:missing"]
     }
   ]
