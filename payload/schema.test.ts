@@ -9,10 +9,11 @@ describe('Payload schema setup', () => {
       '20251223_205825_initial',
       '20260805_223859_core_payload_model',
     ]);
-    for (const migration of migrations) {
+    migrations.map((migration) => {
       expect(migration.up).toEqual(expect.any(Function));
       expect(migration.down).toEqual(expect.any(Function));
-    }
+      return migration;
+    });
   });
 
   it('defines the authenticated users collection and role validation', () => {
