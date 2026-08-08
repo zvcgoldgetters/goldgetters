@@ -1,6 +1,7 @@
 import { test, expect } from './fixtures';
 
 const publicPages = [
+  { path: '/', heading: 'ZVC Goldgetters' },
   { path: '/nieuws', heading: 'Nieuws' },
   { path: '/ploeg', heading: 'Ploeg' },
   { path: '/wedstrijden', heading: 'Wedstrijden' },
