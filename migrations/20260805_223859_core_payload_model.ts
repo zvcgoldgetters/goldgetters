@@ -520,7 +520,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   );
   await db.run(sql`ALTER TABLE \`users\` ADD \`source_updated_at\` text;`);
   await db.run(
-    sql`ALTER TABLE \`users\` ADD \`role\` text DEFAULT 'player' NOT NULL;`,
+    sql`ALTER TABLE \`users\` ADD \`role\` text DEFAULT 'member' NOT NULL;`,
   );
   await db.run(sql`ALTER TABLE \`users\` ADD \`display_name\` text;`);
   await db.run(
@@ -617,20 +617,20 @@ export async function down({
   payload,
   req,
 }: MigrateDownArgs): Promise<void> {
+  await db.run(sql`DROP TABLE \`teams_rels\`;`);
   await db.run(sql`DROP TABLE \`players\`;`);
   await db.run(sql`DROP TABLE \`teams\`;`);
-  await db.run(sql`DROP TABLE \`teams_rels\`;`);
   await db.run(sql`DROP TABLE \`venues\`;`);
   await db.run(sql`DROP TABLE \`leagues\`;`);
-  await db.run(sql`DROP TABLE \`seasons\`;`);
   await db.run(sql`DROP TABLE \`seasons_rels\`;`);
+  await db.run(sql`DROP TABLE \`seasons\`;`);
   await db.run(sql`DROP TABLE \`matches\`;`);
   await db.run(sql`DROP TABLE \`team_events\`;`);
   await db.run(sql`DROP TABLE \`reports\`;`);
   await db.run(sql`DROP TABLE \`previews\`;`);
   await db.run(sql`DROP TABLE \`news\`;`);
-  await db.run(sql`DROP TABLE \`albums\`;`);
   await db.run(sql`DROP TABLE \`albums_rels\`;`);
+  await db.run(sql`DROP TABLE \`albums\`;`);
   await db.run(sql`DROP TABLE \`media\`;`);
   await db.run(sql`DROP TABLE \`bookings\`;`);
   await db.run(sql`DROP TABLE \`source_records\`;`);

@@ -1,9 +1,16 @@
 import type { CollectionConfig } from 'payload';
+import { isEditorial } from '../access/roles';
 import { relationship, sourceFields } from './shared';
 
 export const Players: CollectionConfig = {
   slug: 'players',
   admin: { useAsTitle: 'name', defaultColumns: ['name', 'team', 'status'] },
+  access: {
+    read: () => true,
+    create: isEditorial,
+    update: isEditorial,
+    delete: isEditorial,
+  },
   fields: [
     ...sourceFields,
     { name: 'name', type: 'text', required: true },

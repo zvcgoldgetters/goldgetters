@@ -1,7 +1,12 @@
 import type { GlobalConfig } from 'payload';
+import { isAdministrator } from '../access/roles';
 
 export const clubSettings: GlobalConfig = {
   slug: 'club-settings',
+  access: {
+    read: isAdministrator,
+    update: isAdministrator,
+  },
   label: 'Club settings',
   fields: [
     {
