@@ -3,11 +3,17 @@ import { migrations } from '../migrations';
 import { Users } from './collections/Users';
 
 describe('Payload schema setup', () => {
-  it('registers the initial schema migration with reversible handlers', () => {
-    expect(migrations).toHaveLength(1);
-    expect(migrations[0]?.name).toBe('20251223_205825_initial');
-    expect(migrations[0]?.up).toEqual(expect.any(Function));
-    expect(migrations[0]?.down).toEqual(expect.any(Function));
+  it('registers schema migrations with reversible handlers', () => {
+    expect(migrations).toHaveLength(2);
+    expect(migrations.map((migration) => migration.name)).toEqual([
+      '20251223_205825_initial',
+      '20260805_223859_core_payload_model',
+    ]);
+    migrations.map((migration) => {
+      expect(migration.up).toEqual(expect.any(Function));
+      expect(migration.down).toEqual(expect.any(Function));
+      return migration;
+    });
   });
 
   it('defines the authenticated users collection and role validation', () => {
