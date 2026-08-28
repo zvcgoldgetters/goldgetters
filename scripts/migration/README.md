@@ -39,6 +39,7 @@ python3 scripts/migration/inventory.py \
 
 Keep the generated report and source exports outside Git. The parser is
 intentionally limited to inventory metadata; it is not a Drupal importer.
+
 ## Finance and RSVP importer
 
 `finance_rsvp_importer.py` reconciles normalized `finance`, `rsvp-events`, and
