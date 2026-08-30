@@ -3,6 +3,9 @@ import { fileURLToPath } from 'url';
 import { buildConfig } from 'payload';
 import { sqliteAdapter } from '@payloadcms/db-sqlite';
 import { lexicalEditor } from '@payloadcms/richtext-lexical';
+import { RsvpEvents } from './payload/collections/RsvpEvents';
+import { RsvpResponses } from './payload/collections/RsvpResponses';
+import { TeamEvents } from './payload/collections/TeamEvents';
 import { Users } from './payload/collections/Users';
 import { serverEnv } from './lib/env/server';
 
@@ -31,7 +34,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users],
+  collections: [Users, TeamEvents, RsvpEvents, RsvpResponses],
   editor: lexicalEditor(),
   graphQL: {
     disable: true,

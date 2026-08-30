@@ -4,7 +4,7 @@ import { Users } from './collections/Users';
 
 describe('Payload schema setup', () => {
   it('registers the initial schema migration with reversible handlers', () => {
-    expect(migrations).toHaveLength(1);
+    expect(migrations).toHaveLength(2);
     expect(migrations[0]?.name).toBe('20251223_205825_initial');
     expect(migrations[0]?.up).toEqual(expect.any(Function));
     expect(migrations[0]?.down).toEqual(expect.any(Function));
