@@ -1,6 +1,6 @@
 export function SiteFooter() {
   return (
-    <footer className="w-full border-t border-black/[.08] dark:border-white/[.12] bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 mt-auto">
+    <footer className="mt-auto w-full border-t border-border bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto flex max-w-5xl items-center justify-center gap-4 px-4 py-6">
         <p className="text-base text-muted-foreground">
           &copy; {new Date().getFullYear()} ZVC Goldgetters.
