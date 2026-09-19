@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { Moon, Sun } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 type Theme = 'light' | 'dark';
 
@@ -62,14 +63,16 @@ export function ThemeToggle() {
   const Icon = !mounted || theme === 'light' ? Moon : Sun;
 
   return (
-    <button
+    <Button
       type="button"
       onClick={mounted ? toggle : undefined}
+      disabled={!mounted}
       aria-label="Toggle theme"
-      aria-disabled={!mounted}
-      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#5c461c]/14 bg-white/40 text-[#3a2a0d]/86 transition-colors hover:bg-white/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a07630]/30 sm:h-11 sm:w-11 dark:border-white/12 dark:bg-white/8 dark:text-white dark:hover:bg-white/14 dark:focus-visible:ring-white/40"
+      variant="outline"
+      size="icon"
+      className="size-10 rounded-full sm:size-11"
     >
-      <Icon className="h-4 w-4" />
-    </button>
+      <Icon data-icon="inline-start" aria-hidden="true" />
+    </Button>
   );
 }

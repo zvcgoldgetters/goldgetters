@@ -4,12 +4,12 @@ import { textLinkVariants } from '@/components/goldgetters/design/typography';
 
 export function GoldgettersFooter() {
   return (
-    <footer className="border-t border-[#583f15]/8 bg-[#f6efe3] text-[#46351a]/78 dark:border-white/10 dark:bg-black dark:text-white/72">
+    <footer className="border-t border-brand-border bg-brand-surface text-brand-copy">
       <GoldgettersContainer className="flex flex-col items-center justify-between gap-2 py-8 text-center md:flex-row md:text-left">
-        <p className="text-sm tracking-[0.04em] text-[#46351a]/68 dark:text-white/66">
+        <p className="text-sm tracking-[0.04em] text-brand-muted">
           &copy; {new Date().getFullYear()} ZVC Goldgetters.
         </p>
-        <span className="text-sm tracking-[0.04em] text-[#46351a]/68 dark:text-white/66">
+        <span className="text-sm tracking-[0.04em] text-brand-muted">
           {nl.footer.websiteBy}{' '}
           <a
             href="https://www.cotersus.be/"

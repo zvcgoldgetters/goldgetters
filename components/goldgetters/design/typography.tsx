@@ -4,7 +4,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 export const displayTitleVariants = cva(
-  'max-w-full break-words font-display uppercase text-[#18120a]/94 dark:text-white/94',
+  'max-w-full break-words font-display uppercase text-brand-ink',
   {
     variants: {
       size: {
@@ -54,8 +54,8 @@ export const bodyTextVariants = cva('', {
       detail: 'text-[0.98rem] leading-7',
     },
     tone: {
-      default: 'text-[#382b16]/80 dark:text-white/72',
-      muted: 'text-[#40311c]/78 dark:text-white/64',
+      default: 'text-brand-copy',
+      muted: 'text-brand-muted',
     },
   },
   defaultVariants: {
@@ -76,9 +76,8 @@ export function BodyText({ className, size, tone, ...props }: BodyTextProps) {
 export const textLinkVariants = cva('transition-opacity hover:opacity-75', {
   variants: {
     variant: {
-      footer:
-        'font-medium text-[#46351a]/78 hover:text-[#1f170a] dark:text-white/72 dark:hover:text-white',
-      nav: 'rounded-full px-2.5 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[#493613]/74 transition-colors hover:bg-[#604719]/8 hover:text-[#1f170a] sm:px-4 sm:py-[0.65rem] sm:text-[0.75rem] sm:tracking-[0.22em] dark:text-white/74 dark:hover:bg-white/8 dark:hover:text-white/96',
+      footer: 'font-medium text-brand-copy hover:text-brand-ink',
+      nav: 'rounded-full px-2.5 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-brand-control-foreground transition-colors hover:bg-brand-hover hover:text-brand-ink sm:px-4 sm:py-[0.65rem] sm:text-[0.75rem] sm:tracking-[0.22em]',
     },
   },
   defaultVariants: {
@@ -108,11 +107,11 @@ export function Wordmark({ className, variant, ...props }: WordmarkProps) {
 }
 
 export const sectionLabelVariants = cva(
-  'max-w-full break-words text-[0.68rem] font-bold uppercase tracking-[0.16em] sm:text-[0.72rem] sm:tracking-[0.28em]',
+  'max-w-full break-words text-[0.68rem] font-bold uppercase tracking-[0.16em] text-brand-muted sm:text-[0.72rem] sm:tracking-[0.28em]',
   {
     variants: {
       tone: {
-        default: 'text-[#5d4720]/60 dark:text-white/50',
+        default: '',
       },
     },
     defaultVariants: {

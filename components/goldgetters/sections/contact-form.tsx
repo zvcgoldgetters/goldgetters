@@ -28,6 +28,7 @@ import {
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
+import { Spinner } from '@/components/ui/spinner';
 import { Textarea } from '@/components/ui/textarea';
 
 interface FormData {
@@ -303,6 +304,7 @@ export function ContactForm() {
                 disabled={isSubmitting}
                 size="lg"
               >
+                {isSubmitting && <Spinner data-icon="inline-start" />}
                 {isSubmitting
                   ? nl.contact.form.submitting
                   : nl.contact.form.submit}

@@ -12,7 +12,7 @@ import { ThemeToggle } from '@/components/theme-toggle';
 
 export function SiteHeader() {
   return (
-    <header className="w-full border-b border-black/[.08] dark:border-white/[.12] bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="w-full border-b border-border bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
         <Link href="/" className="flex items-center gap-2 shrink-0">
           <Image
@@ -21,7 +21,7 @@ export function SiteHeader() {
             width={48}
             height={48}
             priority
-            className="h-12 w-12 object-contain"
+            className="size-12 object-contain"
           />
           <span className="text-2xl font-semibold whitespace-nowrap shrink-0 text-gold">
             ZVC Goldgetters

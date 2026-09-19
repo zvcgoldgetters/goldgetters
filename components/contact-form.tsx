@@ -4,8 +4,14 @@ import { useState, useRef } from 'react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Field, FieldLabel, FieldError } from '@/components/ui/field';
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from '@/components/ui/field';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Spinner } from '@/components/ui/spinner';
 import type { TurnstileRef } from '@/components/turnstile';
 import { Turnstile } from '@/components/turnstile';
 import { clientEnv } from '@/lib/env/client';
@@ -122,94 +128,96 @@ export function ContactForm() {
       onSubmit={(event) => {
         void handleSubmit(event);
       }}
-      className="space-y-6"
+      className="flex flex-col gap-6"
     >
-      <Field data-invalid={!!errors.name}>
-        <FieldLabel htmlFor="name">
-          Naam <span className="text-destructive">*</span>
-        </FieldLabel>
-        <Input
-          id="name"
-          name="name"
-          type="text"
-          value={formData.name}
-          onChange={handleChange}
-          placeholder="Uw naam"
-          aria-invalid={!!errors.name}
-        />
-        <FieldError>{errors.name}</FieldError>
-      </Field>
-
-      <Field data-invalid={!!errors.email}>
-        <FieldLabel htmlFor="email">
-          E-mailadres <span className="text-destructive">*</span>
-        </FieldLabel>
-        <Input
-          id="email"
-          name="email"
-          type="email"
-          value={formData.email}
-          onChange={handleChange}
-          placeholder="uw.email@voorbeeld.be"
-          aria-invalid={!!errors.email}
-        />
-        <FieldError>{errors.email}</FieldError>
-      </Field>
-
-      <Field data-invalid={!!errors.subject}>
-        <FieldLabel htmlFor="subject">
-          Onderwerp <span className="text-destructive">*</span>
-        </FieldLabel>
-        <Input
-          id="subject"
-          name="subject"
-          type="text"
-          value={formData.subject}
-          onChange={handleChange}
-          placeholder="Onderwerp van uw bericht"
-          aria-invalid={!!errors.subject}
-        />
-        <FieldError>{errors.subject}</FieldError>
-      </Field>
-
-      <Field data-invalid={!!errors.message}>
-        <FieldLabel htmlFor="message">
-          Bericht <span className="text-destructive">*</span>
-        </FieldLabel>
-        <Textarea
-          id="message"
-          name="message"
-          value={formData.message}
-          onChange={handleChange}
-          placeholder="Uw bericht..."
-          rows={6}
-          aria-invalid={!!errors.message}
-        />
-        <FieldError>{errors.message}</FieldError>
-      </Field>
-
-      {siteKey && (
-        <Field data-invalid={!!errors.turnstile}>
-          <Turnstile
-            ref={turnstileRef}
-            siteKey={siteKey}
-            onVerify={(token) => {
-              setTurnstileToken(token);
-              setErrors((prev) => ({ ...prev, turnstile: undefined }));
-            }}
-            onError={() => {
-              setErrors((prev) => ({
-                ...prev,
-                turnstile: 'Turnstile verification failed',
-              }));
-            }}
-            onExpire={() => {
-              setTurnstileToken('');
-            }}
+      <FieldGroup>
+        <Field data-invalid={!!errors.name}>
+          <FieldLabel htmlFor="name">
+            Naam <span className="text-destructive">*</span>
+          </FieldLabel>
+          <Input
+            id="name"
+            name="name"
+            type="text"
+            value={formData.name}
+            onChange={handleChange}
+            placeholder="Uw naam"
+            aria-invalid={!!errors.name}
           />
-          <FieldError>{errors.turnstile}</FieldError>
+          <FieldError>{errors.name}</FieldError>
         </Field>
-      )}
+
+        <Field data-invalid={!!errors.email}>
+          <FieldLabel htmlFor="email">
+            E-mailadres <span className="text-destructive">*</span>
+          </FieldLabel>
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="uw.email@voorbeeld.be"
+            aria-invalid={!!errors.email}
+          />
+          <FieldError>{errors.email}</FieldError>
+        </Field>
+
+        <Field data-invalid={!!errors.subject}>
+          <FieldLabel htmlFor="subject">
+            Onderwerp <span className="text-destructive">*</span>
+          </FieldLabel>
+          <Input
+            id="subject"
+            name="subject"
+            type="text"
+            value={formData.subject}
+            onChange={handleChange}
+            placeholder="Onderwerp van uw bericht"
+            aria-invalid={!!errors.subject}
+          />
+          <FieldError>{errors.subject}</FieldError>
+        </Field>
+
+        <Field data-invalid={!!errors.message}>
+          <FieldLabel htmlFor="message">
+            Bericht <span className="text-destructive">*</span>
+          </FieldLabel>
+          <Textarea
+            id="message"
+            name="message"
+            value={formData.message}
+            onChange={handleChange}
+            placeholder="Uw bericht..."
+            rows={6}
+            aria-invalid={!!errors.message}
+          />
+          <FieldError>{errors.message}</FieldError>
+        </Field>
+
+        {siteKey && (
+          <Field data-invalid={!!errors.turnstile}>
+            <Turnstile
+              ref={turnstileRef}
+              siteKey={siteKey}
+              onVerify={(token) => {
+                setTurnstileToken(token);
+                setErrors((prev) => ({ ...prev, turnstile: undefined }));
+              }}
+              onError={() => {
+                setErrors((prev) => ({
+                  ...prev,
+                  turnstile: 'Turnstile verification failed',
+                }));
+              }}
+              onExpire={() => {
+                setTurnstileToken('');
+              }}
+            />
+            <FieldError>{errors.turnstile}</FieldError>
+          </Field>
+        )}
+      </FieldGroup>
 
       {submitStatus === 'success' && (
         <Alert>
@@ -229,6 +237,7 @@ export function ContactForm() {
       )}
 
       <Button type="submit" disabled={isSubmitting} className="w-full">
+        {isSubmitting && <Spinner data-icon="inline-start" />}
         {isSubmitting ? 'Verzenden...' : 'Verzend bericht'}
       </Button>
     </form>

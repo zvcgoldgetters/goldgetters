@@ -9,14 +9,14 @@ type GoldgettersButtonProps = Omit<
 
 const goldgettersButtonBaseClass = [
   'rounded-full',
-  'bg-[image:var(--gold-gradient)] bg-[length:180%]',
-  'text-[var(--goldgetters-button-text)]',
-  'shadow-[var(--goldgetters-button-shadow)]',
+  'bg-[image:var(--brand-gradient)] bg-[length:180%]',
+  'text-brand-accent-foreground',
+  'shadow-brand',
   'transition-[transform,background-position,box-shadow] duration-200',
   'hover:-translate-y-px hover:bg-[position:100%_50%]',
-  'hover:shadow-[var(--goldgetters-button-shadow-hover)]',
+  'hover:shadow-brand-hover',
   'focus-visible:outline-none',
-  'focus-visible:ring-2 focus-visible:ring-[var(--goldgetters-form-required)]',
+  'focus-visible:ring-2 focus-visible:ring-brand-accent',
   'focus-visible:ring-offset-2 focus-visible:ring-offset-background',
 ].join(' ');
 

@@ -12,19 +12,19 @@ import { GoldgettersContainer } from '@/components/goldgetters/layout/container'
 import { GoldgettersGrid } from '@/components/goldgetters/layout/grid';
 
 const heroStageClass = cva(
-  'relative overflow-clip bg-[radial-gradient(circle_at_top_left,rgba(208,164,85,0.28),transparent_32%),radial-gradient(circle_at_72%_18%,rgba(235,193,110,0.22),transparent_22%),linear-gradient(135deg,#f7f1e4_0%,#efe5d5_48%,#e9ddc8_100%)] dark:bg-[radial-gradient(circle_at_top_left,rgba(161,114,43,0.28),transparent_32%),radial-gradient(circle_at_72%_18%,rgba(255,214,126,0.18),transparent_22%),linear-gradient(135deg,#060606_0%,#0e0d0a_48%,#040404_100%)]',
+  'relative overflow-clip bg-[image:var(--brand-hero-background)]',
 );
 
 const heroOverlayGridClass = cva(
-  'pointer-events-none absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(67,49,20,0.018)_1px,transparent_1px),linear-gradient(90deg,rgba(67,49,20,0.018)_1px,transparent_1px)] [background-size:72px_72px] [mask-image:linear-gradient(180deg,black,transparent_92%)] dark:[background-image:linear-gradient(rgba(255,255,255,0.018)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.018)_1px,transparent_1px)]',
+  'pointer-events-none absolute inset-0 opacity-20 [background-image:var(--brand-hero-grid)] [background-size:72px_72px] [mask-image:linear-gradient(180deg,black,transparent_92%)]',
 );
 
 const heroBeamLeftClass = cva(
-  'pointer-events-none absolute inset-y-[-12%] left-[-9rem] w-[34rem] rounded-full bg-[linear-gradient(180deg,rgba(244,197,104,0.3),transparent_72%)] opacity-50 blur-[14px] [animation:beam-sway_10s_ease-in-out_infinite]',
+  'pointer-events-none absolute inset-y-[-12%] left-[-9rem] w-[34rem] rounded-full bg-[image:var(--brand-hero-beam-left)] opacity-50 blur-[14px] [animation:beam-sway_10s_ease-in-out_infinite]',
 );
 
 const heroBeamRightClass = cva(
-  'pointer-events-none absolute inset-y-[-12%] right-[-11rem] w-[34rem] rounded-full bg-[linear-gradient(180deg,rgba(253,218,146,0.22),transparent_78%)] opacity-50 blur-[14px] [animation:beam-sway_10s_ease-in-out_infinite] [animation-delay:-5s]',
+  'pointer-events-none absolute inset-y-[-12%] right-[-11rem] w-[34rem] rounded-full bg-[image:var(--brand-hero-beam-right)] opacity-50 blur-[14px] [animation:beam-sway_10s_ease-in-out_infinite] [animation-delay:-5s]',
 );
 
 const heroContainerLayoutClass = cva('', {
