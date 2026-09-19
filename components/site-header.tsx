@@ -5,7 +5,6 @@ import {
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
 import { siteNavItems } from '@/components/navigation/site-nav-items';
 import { ThemeToggle } from '@/components/theme-toggle';
@@ -32,10 +31,7 @@ export function SiteHeader() {
             <NavigationMenuList>
               {siteNavItems.map((item) => (
                 <NavigationMenuItem key={item.href}>
-                  <NavigationMenuLink
-                    asChild
-                    className={navigationMenuTriggerStyle()}
-                  >
+                  <NavigationMenuLink asChild variant="trigger">
                     <Link href={item.href}>{item.label}</Link>
                   </NavigationMenuLink>
                 </NavigationMenuItem>
