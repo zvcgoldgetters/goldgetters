@@ -30,6 +30,7 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { Spinner } from '@/components/ui/spinner';
 import { Textarea } from '@/components/ui/textarea';
+import { clientEnv } from '@/lib/env/client';
 
 interface FormData {
   name: string;
@@ -62,7 +63,7 @@ export function ContactForm() {
   const [turnstileReady, setTurnstileReady] = useState(false);
   const [turnstileLoadError, setTurnstileLoadError] = useState(false);
   const turnstileRef = useRef<TurnstileRef>(null);
-  const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+  const siteKey = clientEnv.turnstileSiteKey;
   const shouldRenderTurnstile = Boolean(siteKey);
 
   const validateForm = (): boolean => {
@@ -159,6 +160,8 @@ export function ContactForm() {
 
       <GoldgettersCardContent>
         <form
+          aria-busy={isSubmitting}
+          noValidate
           onSubmit={(event) => {
             void handleSubmit(event);
           }}
@@ -166,7 +169,10 @@ export function ContactForm() {
           <GoldgettersStack gap="lg">
             <FieldGroup>
               <GoldgettersGrid gap="md" columns="twoSm">
-                <Field data-invalid={!!errors.name}>
+                <Field
+                  data-disabled={isSubmitting}
+                  data-invalid={!!errors.name}
+                >
                   <FieldLabel htmlFor="name">
                     {nl.contact.form.nameLabel} *
                   </FieldLabel>
@@ -174,6 +180,9 @@ export function ContactForm() {
                     id="name"
                     name="name"
                     type="text"
+                    autoComplete="name"
+                    disabled={isSubmitting}
+                    required
                     value={formData.name}
                     onChange={handleChange}
                     placeholder={nl.contact.form.namePlaceholder}
@@ -182,7 +191,10 @@ export function ContactForm() {
                   <FieldError>{errors.name}</FieldError>
                 </Field>
 
-                <Field data-invalid={!!errors.email}>
+                <Field
+                  data-disabled={isSubmitting}
+                  data-invalid={!!errors.email}
+                >
                   <FieldLabel htmlFor="email">
                     {nl.contact.form.emailLabel} *
                   </FieldLabel>
@@ -190,6 +202,9 @@ export function ContactForm() {
                     id="email"
                     name="email"
                     type="email"
+                    autoComplete="email"
+                    disabled={isSubmitting}
+                    required
                     value={formData.email}
                     onChange={handleChange}
                     placeholder={nl.contact.form.emailPlaceholder}
@@ -202,7 +217,10 @@ export function ContactForm() {
 
             <FieldGroup>
               <GoldgettersStack gap="lg">
-                <Field data-invalid={!!errors.subject}>
+                <Field
+                  data-disabled={isSubmitting}
+                  data-invalid={!!errors.subject}
+                >
                   <FieldLabel htmlFor="subject">
                     {nl.contact.form.subjectLabel} *
                   </FieldLabel>
@@ -210,6 +228,8 @@ export function ContactForm() {
                     id="subject"
                     name="subject"
                     type="text"
+                    disabled={isSubmitting}
+                    required
                     value={formData.subject}
                     onChange={handleChange}
                     placeholder={nl.contact.form.subjectPlaceholder}
@@ -218,13 +238,18 @@ export function ContactForm() {
                   <FieldError>{errors.subject}</FieldError>
                 </Field>
 
-                <Field data-invalid={!!errors.message}>
+                <Field
+                  data-disabled={isSubmitting}
+                  data-invalid={!!errors.message}
+                >
                   <FieldLabel htmlFor="message">
                     {nl.contact.form.messageLabel} *
                   </FieldLabel>
                   <Textarea
                     id="message"
                     name="message"
+                    disabled={isSubmitting}
+                    required
                     value={formData.message}
                     onChange={handleChange}
                     placeholder={nl.contact.form.messagePlaceholder}

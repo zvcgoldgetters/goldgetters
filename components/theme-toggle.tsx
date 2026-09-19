@@ -69,8 +69,8 @@ export function ThemeToggle() {
       disabled={!mounted}
       aria-label="Toggle theme"
       variant="outline"
-      size="icon"
-      className="size-10 rounded-full sm:size-11"
+      size="icon-lg"
+      className="rounded-full sm:size-11"
     >
       <Icon data-icon="inline-start" aria-hidden="true" />
     </Button>
