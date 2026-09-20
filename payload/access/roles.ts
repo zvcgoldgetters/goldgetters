@@ -45,6 +45,13 @@ export const isAdministrator = hasAccessRole(['administrator']);
 export const isEditorial = hasAccessRole(['administrator', 'editor']);
 export const isFinance = hasAccessRole(['administrator', 'finance']);
 export const isOrganizer = hasAccessRole(['administrator', 'organizer']);
+export function publishedReadAccess(user: RoleBearingUser) {
+  return hasAnyRole(user, ['administrator', 'editor'])
+    ? true
+    : { _status: { equals: 'published' as const } };
+}
+export const isPublished = ({ req }: AccessArgs) =>
+  publishedReadAccess(req.user as RoleBearingUser);
 export const isMember = hasAccessRole([
   'administrator',
   'editor',
