@@ -13,7 +13,7 @@ Goldgetters is a Next.js 16 application with a public frontend and an integrated
 
 ## Prerequisites
 
-- Node.js 20+
+- Node.js 22.12+
 - npm (this repo uses `package-lock.json`)
 
 ## Setup
