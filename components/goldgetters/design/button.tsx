@@ -9,11 +9,9 @@ type GoldgettersButtonProps = Omit<
 
 const goldgettersButtonBaseClass = [
   'rounded-full',
-  'bg-[image:var(--brand-gradient)] bg-[length:180%]',
-  'text-brand-accent-foreground',
   'shadow-brand',
   'transition-[transform,background-position,box-shadow] duration-200',
-  'hover:-translate-y-px hover:bg-[position:100%_50%]',
+  'hover:-translate-y-px',
   'hover:shadow-brand-hover',
   'focus-visible:outline-none',
   'focus-visible:ring-2 focus-visible:ring-brand-accent',
@@ -26,7 +24,7 @@ export function GoldgettersButton({
 }: GoldgettersButtonProps) {
   return (
     <Button
-      variant="default"
+      variant="brand"
       className={cn(goldgettersButtonBaseClass, className)}
       {...props}
     />
