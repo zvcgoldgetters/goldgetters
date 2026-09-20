@@ -3,6 +3,7 @@ import * as migration_20260918_160426_add_reset_password_requested_at from './20
 import * as migration_20260920_210000_core_payload_model from './20260920_210000_core_payload_model';
 import * as migration_20260920_210445_use_payload_slug_fields from './20260920_210445_use_payload_slug_fields';
 import * as migration_20260920_214447_enable_editorial_drafts from './20260920_214447_enable_editorial_drafts';
+import * as migration_20260921_090000_repair_locked_document_relationships from './20260921_090000_repair_locked_document_relationships';
 
 export const migrations = [
   {
@@ -29,5 +30,10 @@ export const migrations = [
     up: migration_20260920_214447_enable_editorial_drafts.up,
     down: migration_20260920_214447_enable_editorial_drafts.down,
     name: '20260920_214447_enable_editorial_drafts',
+  },
+  {
+    up: migration_20260921_090000_repair_locked_document_relationships.up,
+    down: migration_20260921_090000_repair_locked_document_relationships.down,
+    name: '20260921_090000_repair_locked_document_relationships',
   },
 ];

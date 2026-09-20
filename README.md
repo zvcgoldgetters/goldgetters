@@ -45,6 +45,7 @@ cp .env.example .env
 - Optional:
   - `CONTACT_EMAIL_TO`
   - `CONTACT_EMAIL_FROM`
+  - `PAYLOAD_EMAIL_FROM` and `PAYLOAD_EMAIL_FROM_NAME` for Payload auth emails such as forgot-password links
   - `PAYLOAD_AUTO_LOGIN_ENABLED`
   - `PAYLOAD_ADMIN_EMAIL`
   - `PAYLOAD_ADMIN_PASSWORD`

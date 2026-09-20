@@ -11,6 +11,7 @@ describe('Payload schema setup', () => {
       '20260920_210000_core_payload_model',
       '20260920_210445_use_payload_slug_fields',
       '20260920_214447_enable_editorial_drafts',
+      '20260921_090000_repair_locked_document_relationships',
     ]);
     migrations.map((migration) => {
       expect(migration.up).toEqual(expect.any(Function));
@@ -68,6 +69,7 @@ describe('Payload schema setup', () => {
     const { default: payloadConfig } = await import('../payload.config');
     const config = await payloadConfig;
 
+    expect(typeof config.email).toBe('function');
     expect(config.collections.map((collection) => collection.slug)).toEqual([
       'users',
       'players',

@@ -20,6 +20,20 @@ const publicCollections = [
 const privateCollections = ['users', 'bookings', 'source-records'] as const;
 
 test.describe('Payload domain API', () => {
+  test('serves the forgot-password endpoint without exposing account existence', async ({
+    request,
+  }) => {
+    const response = await request.post('/api/users/forgot-password', {
+      data: { email: 'missing-user@example.test' },
+    });
+
+    expect(response.status()).toBe(OK_STATUS);
+    await expect(response).toBeOK();
+    expect(await response.json()).toMatchObject({
+      message: expect.any(String),
+    });
+  });
+
   test('exposes public collection reads', async ({ request }) => {
     await Promise.all(
       publicCollections.map(async (collection) => {

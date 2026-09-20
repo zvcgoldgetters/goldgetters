@@ -12,7 +12,7 @@ import { migrations } from '../migrations';
 const repositoryRoot = fileURLToPath(new URL('../', import.meta.url));
 const migrationTestTimeout = 30_000;
 const releasedMigrationCount = 2;
-
+const repairMigrationStatementCount = 30;
 function migrationBatch(start: number, end?: number): Migration[] {
   // Payload's runtime Migration type uses unknown arguments while generated
   // SQLite migrations use the adapter-specific argument type.
@@ -60,6 +60,7 @@ describe('Payload migrations', () => {
       vi.stubEnv('DATABASE_URI', databaseUri);
       vi.stubEnv('PAYLOAD_SECRET', 'test-secret');
       vi.stubEnv('PAYLOAD_MIGRATING', 'true');
+      vi.resetModules();
 
       try {
         const { getPayload } = await import('payload');
@@ -78,6 +79,39 @@ describe('Payload migrations', () => {
         vi.unstubAllEnvs();
         rmSync(directory, { force: true, recursive: true });
       }
+    },
+    migrationTestTimeout,
+  );
+
+  it(
+    'adds missing lock relationship columns and indexes without assuming a pristine database',
+    async () => {
+      const db = {
+        run: vi
+          .fn()
+          .mockResolvedValueOnce({
+            rows: [{ name: 'payload_locked_documents_rels' }],
+          })
+          .mockResolvedValueOnce({
+            rows: [
+              { name: 'id' },
+              { name: 'order' },
+              { name: 'parent_id' },
+              { name: 'path' },
+              { name: 'users_id' },
+            ],
+          })
+          .mockResolvedValue({ rows: [] }),
+      };
+      const repairMigration = migrations.at(-1);
+
+      await repairMigration?.up({
+        db,
+        payload: {} as never,
+        req: {} as never,
+      } as never);
+
+      expect(db.run).toHaveBeenCalledTimes(repairMigrationStatementCount);
     },
     migrationTestTimeout,
   );

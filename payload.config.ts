@@ -19,6 +19,7 @@ import { Teams } from './payload/collections/Teams';
 import { Users } from './payload/collections/Users';
 import { Venues } from './payload/collections/Venues';
 import { clubSettings } from './payload/globals/ClubSettings';
+import { createPayloadEmailAdapter } from './payload/emailAdapter';
 import { serverEnv } from './lib/env/server';
 
 const filename = fileURLToPath(import.meta.url);
@@ -65,6 +66,14 @@ export default buildConfig({
   ],
   globals: [clubSettings],
   editor: lexicalEditor(),
+  email: createPayloadEmailAdapter({
+    fromAddress: serverEnv.payloadEmailFrom,
+    fromName: serverEnv.payloadEmailFromName,
+    smtpHost: serverEnv.smtpHost,
+    smtpPass: serverEnv.smtpPass,
+    smtpPort: serverEnv.smtpPort,
+    smtpUser: serverEnv.smtpUser,
+  }),
   graphQL: {
     disable: true,
   },
