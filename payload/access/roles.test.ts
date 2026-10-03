@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { hasAnyRole, hasRole, isAuthenticated, userRoles } from './roles';
+import {
+  hasAnyRole,
+  hasRole,
+  isAuthenticated,
+  publishedReadAccess,
+  userRoles,
+} from './roles';
 
 describe('Payload user roles', () => {
   it('defines the migration role vocabulary', () => {
@@ -33,5 +39,12 @@ describe('Payload user roles', () => {
     expect(isAuthenticated({ id: 'user-1' })).toBe(true);
     expect(isAuthenticated(null)).toBe(false);
     expect(isAuthenticated(undefined)).toBe(false);
+  });
+
+  it('limits unauthenticated editorial reads to published documents', () => {
+    expect(publishedReadAccess(null)).toEqual({
+      _status: { equals: 'published' },
+    });
+    expect(publishedReadAccess({ role: 'editor' })).toBe(true);
   });
 });

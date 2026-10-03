@@ -56,8 +56,9 @@ Do not commit real secrets or local database files.
 - Start development server: `npm run dev`
 - Open app locally: `http://localhost:3000`
 - Open Payload admin locally: `http://localhost:3000/admin`
-- Production build with migrations: `npm run build`
-- CI-equivalent build: `npm run ci`
+- Production build: `npm run build`
+- Production release with migrations: `npm run build:with-migrations`
+- CI-equivalent build with migrations: `npm run ci`
 - Start built app: `npm run start`
 - Lint: `npm run lint`
 - Format all supported files: `npm run format`
@@ -67,6 +68,12 @@ Do not commit real secrets or local database files.
 - Run pending Payload migrations: `npm run migrate`
 - Create a Payload migration: `npm run migrate:create`
 - Roll back a Payload migration: `npm run migrate:down`
+
+Local Payload development uses schema push against the default `payload.db`;
+keep it separate from migration-managed databases. Do not run `npm run migrate`
+against that local file and then start `npm run dev`. If schema push reports an
+ambiguous column rename after a model change, preserve a backup, recreate the
+empty local database, and let `npm run dev` push the current schema.
 
 ## Testing Instructions
 
@@ -101,6 +108,10 @@ Do not commit real secrets or local database files.
 - Schema or content model changes require a migration in `migrations/`.
 - After creating or editing migrations, run `npm run migrate` against the intended local database.
 - Payload types are emitted to `payload-types.ts`; avoid manual edits unless there is no generator-backed alternative.
+- Use Payload's native `slugField({ useAsSlug })` helper for generated slugs. It adds a `generateSlug` field and therefore requires a matching migration; test both the field configuration and runtime slug generation.
+- Keep domain lifecycle fields such as player, match, and booking `status` separate from Payload publication state. Add `versions: { drafts: true }` only when an editorial draft workflow is explicitly in scope.
+- Treat `payload migrate:create` output as a draft: inspect both the SQL and snapshot, and verify that the migration is incremental when earlier migration snapshots are partial or predefined.
+- Test collection access with the Local API, `overrideAccess: false`, a temporary SQLite database, and the real migration batch. Use REST E2E coverage for public/private endpoint behavior and collection registration.
 
 ## Drupal Migration Notes
 
@@ -155,3 +166,13 @@ If a check cannot be run, document the reason and the risk.
 - Keep PRs focused on one coherent change.
 - PR descriptions should mention user-facing behavior, Payload migrations, environment changes, and validation performed.
 - Do not rely on Husky alone. The pre-commit hook runs `npx lint-staged`, which primarily formats staged files.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

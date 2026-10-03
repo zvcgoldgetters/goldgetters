@@ -1,4 +1,14 @@
+import { mkdtempSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { defineConfig, devices } from '@playwright/test';
+
+const e2eDatabaseDirectory = mkdtempSync(join(tmpdir(), 'goldgetters-e2e-'));
+const e2eDatabasePath = join(e2eDatabaseDirectory, 'payload.db');
+
+process.once('exit', () => {
+  rmSync(e2eDatabaseDirectory, { force: true, recursive: true });
+});
 
 const configuredCoverageDirs =
   process.env.COVERAGE_SOURCE_DIRS ??
@@ -77,8 +87,8 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "NEXT_PUBLIC_TURNSTILE_SITE_KEY='' npm run dev",
+    command: `DATABASE_URI=file:${e2eDatabasePath} PAYLOAD_SECRET=test-secret NEXT_PUBLIC_TURNSTILE_SITE_KEY='' npm run dev`,
     url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false,
   },
 });

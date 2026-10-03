@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "payload migrate && next build",
-    "ci": "payload migrate && next build",
+    "build": "next build",
+    "build:with-migrations": "npm run migrate && npm run build",
+    "ci": "npm run build:with-migrations",
     "typecheck": "tsc --noEmit",
     "generate:types": "payload generate:types",
     "start": "next start",
@@ -18,7 +19,8 @@
     "prepare": "husky || true",
     "migrate": "payload migrate",
     "migrate:create": "payload migrate:create",
-    "migrate:down": "payload migrate:down"
+    "migrate:down": "payload migrate:down",
+    "migrate:status": "payload migrate:status"
   },
   "dependencies": {
     "@payloadcms/db-sqlite": "3.90.0",
