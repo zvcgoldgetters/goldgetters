@@ -39,8 +39,32 @@ python3 scripts/migration/inventory.py \
 
 Keep the generated report and source exports outside Git. The parser is
 intentionally limited to inventory metadata; it is not a Drupal importer.
-Run its standard-library tests with:
+
+## Content and match importer
+
+`content_importer.py` reconciles normalized JSON or JSONL collections for news,
+reports, previews, photo albums, sponsors, matches, team events, and match
+events. It validates optional SHA-256 checksums, requires stable `source_id`
+values, resolves cross-collection references, and reports unresolved
+relationships without silently dropping records. The target-neutral state store
+is an auditable checkpoint for the future Payload adapter:
+
+```bash
+python3 scripts/migration/content_importer.py \\
+  --manifest /private/migration/content-manifest.json \\
+  --state /private/migration/content-state.json \\
+  --dry-run
+```
+
+A manifest contains a `collections` array with `name`, `path`, and optional
+`sha256` fields. Each record contains `source_id`, a `data` object, and optional
+`references` entries with `collection` and `source_id`. Omit `--dry-run` only
+after reviewing the reconciliation report. Imports upsert records and never
+delete records absent from a later export.
+
+Run the standard-library tests with:
 
 ```bash
 python3 scripts/migration/test_inventory.py -v
+python3 scripts/migration/test_content_importer.py -v
 ```
