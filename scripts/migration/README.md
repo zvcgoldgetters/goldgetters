@@ -39,8 +39,34 @@ python3 scripts/migration/inventory.py \
 
 Keep the generated report and source exports outside Git. The parser is
 intentionally limited to inventory metadata; it is not a Drupal importer.
+
+## Finance and RSVP importer
+
+`finance_rsvp_importer.py` reconciles normalized `finance`, `rsvp-events`, and
+`rsvp-responses` exports. It supports JSON and JSONL inputs, validates optional
+SHA-256 checksums, retains stable Drupal booking/invitation identifiers, and
+reports unresolved user, team-event, and RSVP-event references. Imports are
+repeatable upserts and never delete records missing from a later export.
+
+RSVP response states are `yes`, `no`, `maybe`, and `none`; guest counts must be
+non-negative integers. Raw invitation tokens and other sensitive values are
+rejected. Only a token hash and revocation metadata may be supplied by a later
+Payload adapter.
+
+```bash
+python3 scripts/migration/finance_rsvp_importer.py \
+  --manifest /private/migration/finance-rsvp-manifest.json \
+  --state /private/migration/finance-rsvp-state.json \
+  --dry-run
+```
+
+The manifest uses the same `collections` shape as the other migration tools;
+each entry has `name`, `path`, and an optional `sha256`. Keep source exports,
+state, and reconciliation reports outside Git.
+
 Run its standard-library tests with:
 
 ```bash
 python3 scripts/migration/test_inventory.py -v
+python3 scripts/migration/test_finance_rsvp_importer.py -v
 ```
