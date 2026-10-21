@@ -5,7 +5,7 @@ updates:
     directory: '/'
     schedule:
       interval: 'weekly'
-      day: 'monday'
+      day: 'saturday'
       time: '08:00'
       timezone: 'Europe/Brussels'
     assignees:
@@ -21,20 +21,14 @@ updates:
       semver-minor-days: 7
       semver-patch-days: 3
     groups:
-      security-patches:
+      security-updates:
         applies-to: security-updates
         patterns:
           - '*'
-        update-types:
-          - 'patch'
-          - 'minor'
       payload-cms:
         patterns:
           - 'payload'
           - '@payloadcms/*'
-        update-types:
-          - 'patch'
-          - 'minor'
       next-react:
         patterns:
           - 'next'
@@ -43,16 +37,10 @@ updates:
           - 'react-dom'
           - '@types/react'
           - '@types/react-dom'
-        update-types:
-          - 'patch'
-          - 'minor'
       radix-ui:
         patterns:
           - '@radix-ui/*'
           - 'radix-ui'
-        update-types:
-          - 'patch'
-          - 'minor'
       styling:
         patterns:
           - '@tailwindcss/*'
@@ -61,9 +49,6 @@ updates:
           - 'tw-animate-css'
           - 'class-variance-authority'
           - 'clsx'
-        update-types:
-          - 'patch'
-          - 'minor'
       testing:
         dependency-type: 'development'
         patterns:
@@ -73,36 +58,32 @@ updates:
           - 'jsdom'
           - 'monocart-reporter'
           - 'vitest'
-        update-types:
-          - 'patch'
-          - 'minor'
       lint-format:
         dependency-type: 'development'
         patterns:
           - '@eslint/*'
           - '@pellegrims/eslint-config-base'
+          - '@shadcn/lint'
+          - '@typescript-eslint/*'
+          - '@types/node'
           - 'eslint'
           - 'husky'
           - 'lint-staged'
           - 'prettier'
           - 'typescript'
-        update-types:
-          - 'patch'
-          - 'minor'
-      production-patches:
-        dependency-type: 'production'
-        update-types:
-          - 'patch'
-      development-patches:
-        dependency-type: 'development'
-        update-types:
-          - 'patch'
+      runtime-libraries:
+        patterns:
+          - '@types/nodemailer'
+          - 'graphql'
+          - 'lucide-react'
+          - 'nodemailer'
+          - 'sharp'
 
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
       interval: 'weekly'
-      day: 'monday'
+      day: 'saturday'
       time: '08:30'
       timezone: 'Europe/Brussels'
     assignees:
