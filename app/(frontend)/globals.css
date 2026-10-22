@@ -47,6 +47,7 @@
   --color-brand-hover: var(--brand-hover);
   --color-brand-accent: var(--brand-accent);
   --color-brand-accent-foreground: var(--brand-accent-foreground);
+  --color-gold: var(--brand-accent);
   --color-brand-button: var(--brand-button);
   --color-brand-button-foreground: var(--brand-button-foreground);
   --radius-sm: calc(var(--radius) - 4px);
