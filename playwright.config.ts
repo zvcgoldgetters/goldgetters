@@ -19,7 +19,8 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? CI_RETRIES : 0,
-  workers: process.env.CI ? 1 : undefined,
+  // Parallelize the browser matrix to reduce CI wall time.
+  workers: process.env.CI ? 2 : undefined,
   reporter: [
     ['list'],
     [
