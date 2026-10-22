@@ -8,7 +8,7 @@ Goldgetters is a Next.js 16 application with a public frontend and an integrated
 
 - Runtime stack: Next.js 16 App Router, React 19, TypeScript, Tailwind CSS 4, Payload CMS 3, SQLite.
 - Package manager: npm. `package-lock.json` is committed; do not switch package managers.
-- Node version: use Node.js 22.12 or newer, matching CI and Vitest.
+- Node version: use the version pinned in `.nvmrc` for local development and CI; keep it within the installed Payload version's supported Node range.
 - Path aliases: `@/*` points to the repository root; `@payload-config` points to `payload.config.ts`.
 - Payload GraphQL is disabled.
 
