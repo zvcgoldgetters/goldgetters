@@ -8,7 +8,7 @@ export const displayTitleVariants = cva(
   {
     variants: {
       size: {
-        hero: 'text-[clamp(2.1rem,11vw,5.6rem)] leading-[0.9] tracking-[0.01em] sm:text-7xl lg:text-[8.5rem]',
+        hero: 'text-[clamp(2.1rem,11vw,5.6rem)] leading-[0.9] tracking-[0.01em] sm:text-7xl lg:text-[clamp(7rem,15vh,8.5rem)]',
         panel: 'text-[2rem] leading-[0.95]',
         detail: 'text-[1.15rem] tracking-[0.05em]',
         intro: 'text-[clamp(2.8rem,12vw,3.8rem)] leading-[0.92] sm:text-6xl',
