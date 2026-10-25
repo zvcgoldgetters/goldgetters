@@ -3,10 +3,30 @@ import { plugin as shadcn } from '@shadcn/lint';
 import nextCoreWebVitals from 'eslint-config-next/core-web-vitals';
 import nextTypescript from 'eslint-config-next/typescript';
 
+// Reuse the base plugins because ESLint 10 rejects duplicate plugin registrations.
+const basePlugins = pellegrimsBase.reduce(
+  (plugins, config) => ({ ...plugins, ...config.plugins }),
+  {},
+);
+
+const withSharedPlugins = (config) =>
+  config.plugins
+    ? {
+        ...config,
+        plugins: {
+          ...config.plugins,
+          ...(config.plugins.import ? { import: basePlugins.import } : {}),
+          ...(config.plugins['@typescript-eslint']
+            ? { '@typescript-eslint': basePlugins['@typescript-eslint'] }
+            : {}),
+        },
+      }
+    : config;
+
 const eslintConfig = [
   ...pellegrimsBase,
-  ...nextCoreWebVitals,
-  ...nextTypescript,
+  ...nextCoreWebVitals.map(withSharedPlugins),
+  ...nextTypescript.map(withSharedPlugins),
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
     plugins: { shadcn },
