@@ -60,7 +60,7 @@
     "husky": "^9.0.11",
     "jsdom": "^30.1.3",
     "lint-staged": "^17.6.0",
-    "monocart-reporter": "^2.14.1",
+    "monocart-reporter": "^2.15.1",
     "prettier": "^3.9.10",
     "tailwindcss": "^4",
     "tw-animate-css": "^1.3.8",
