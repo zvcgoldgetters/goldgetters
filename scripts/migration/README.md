@@ -37,10 +37,49 @@ python3 scripts/migration/inventory.py \
   --output /private/path/goldgetters-source-inventory.json
 ```
 
-Keep the generated report and source exports outside Git. The parser is
-intentionally limited to inventory metadata; it is not a Drupal importer.
-Run its standard-library tests with:
+Keep the generated report and source exports outside Git. The parser is intentionally limited to inventory metadata; it is not a Drupal importer.
+
+## Incremental importer
+
+`importer.py` accepts a sanitized record export with this shape:
+
+```json
+{
+  "records": [
+    {
+      "source_id": "node:42",
+      "changed_at": "2026-01-01T00:00:00Z",
+      "entity": "news",
+      "data": {},
+      "references": []
+    }
+  ]
+}
+```
+
+It stores the watermark, stable source mappings, and import-run audit rows in a
+SQLite state database. Each record is isolated and retried independently; a
+failed record is reported without losing successful records. Reruns are safe,
+and `--incremental` selects records newer than the last successful watermark.
+The JSON target adapter is deliberately small so a Payload adapter can be
+introduced without changing the state and reporting contract:
+
+```bash
+python3 scripts/migration/importer.py \\
+  --source /private/path/records.json \\
+  --state /private/path/import-state.sqlite \\
+  --target /private/path/target.json \\
+  --output /private/path/import-report.json \\
+  --incremental
+```
+
+Use `--dry-run` for a non-writing plan. Missing source IDs are reported in the
+run report and are not deleted or archived automatically; any archival action
+requires a reviewed follow-up.
+
+Run the standard-library tests with:
 
 ```bash
 python3 scripts/migration/test_inventory.py -v
+python3 scripts/migration/test_importer.py -v
 ```
