@@ -68,6 +68,7 @@ Payload admin: [http://localhost:3000/admin](http://localhost:3000/admin)
 - `npm run ci` - CI-equivalent build (`payload migrate && next build`)
 - `npm run start` - start production server
 - `npm run lint` - run ESLint
+- `npm run typecheck` - run the native TypeScript 7 compiler
 - `npm run format` - run Prettier write
 - `npm run format:check` - run Prettier check
 - `npm run test` - run Vitest unit/integration tests
@@ -101,5 +102,6 @@ Use targeted checks where possible, then run broader checks before merging.
 
 ## Notes
 
+- TypeScript follows Microsoft's [side-by-side setup](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/#running-side-by-side-with-typescript-60): `@typescript/native` aliases TypeScript 7 and provides `tsc`, while `typescript` aliases `@typescript/typescript6` for tools that need the compiler API, including ESLint and Next.js. Keep both aliases when updating dependencies.
 - Payload GraphQL is disabled in this project.
 - The Payload admin layout file under `app/(payload)/layout.tsx` is generated. Prefer changing source config files instead of editing generated files directly.
