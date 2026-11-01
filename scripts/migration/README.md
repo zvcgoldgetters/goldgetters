@@ -18,9 +18,9 @@ provenance, expected status/access metadata, redirect flags, and migration
 status; keep it outside Git with the source exports:
 
 ```bash
-python3 scripts/migration/url_manifest.py \\
-  --sql /path/to/mysql.sql.gz \\
-  --crawl /path/to/crawl.json \\
+python3 scripts/migration/url_manifest.py \
+  --sql /path/to/mysql.sql.gz \
+  --crawl /path/to/crawl.json \
   --output /private/path/legacy-url-manifest.json
 ```
 
@@ -39,8 +39,31 @@ python3 scripts/migration/inventory.py \
 
 Keep the generated report and source exports outside Git. The parser is
 intentionally limited to inventory metadata; it is not a Drupal importer.
-Run its standard-library tests with:
+
+## Reference entity importer
+
+`reference_importer.py` reconciles normalized JSON or JSONL collections for
+users, players, teams, venues, leagues, seasons, and club settings. It checks
+optional SHA-256 values, uses stable `source_id` keys, preserves records that
+are absent from a later source, and reports unresolved relationships without
+silently dropping them. The state store is a target-neutral checkpoint for the
+Payload adapter:
+
+```bash
+python3 scripts/migration/reference_importer.py \
+  --manifest /private/migration/reference-manifest.json \
+  --state /private/migration/reference-state.json \
+  --dry-run
+```
+
+A manifest contains a `collections` array with `name`, `path`, and optional
+`sha256` fields. Records contain `source_id`, a `data` object, and optional
+`references` entries with `collection` and `source_id`. Omit `--dry-run` only
+after reviewing the reconciliation report.
+
+Run the standard-library tests with:
 
 ```bash
 python3 scripts/migration/test_inventory.py -v
+python3 scripts/migration/test_reference_importer.py -v
 ```
