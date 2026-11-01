@@ -3,7 +3,23 @@ import { fileURLToPath } from 'url';
 import { buildConfig } from 'payload';
 import { sqliteAdapter } from '@payloadcms/db-sqlite';
 import { lexicalEditor } from '@payloadcms/richtext-lexical';
+import { Albums } from './payload/collections/Albums';
+import { Bookings } from './payload/collections/Bookings';
+import { Leagues } from './payload/collections/Leagues';
+import { Matches } from './payload/collections/Matches';
+import { Media } from './payload/collections/Media';
+import { News } from './payload/collections/News';
+import { Players } from './payload/collections/Players';
+import { Previews } from './payload/collections/Previews';
+import { Reports } from './payload/collections/Reports';
+import { Seasons } from './payload/collections/Seasons';
+import { SourceRecords } from './payload/collections/SourceRecords';
+import { TeamEvents } from './payload/collections/TeamEvents';
+import { Teams } from './payload/collections/Teams';
 import { Users } from './payload/collections/Users';
+import { Venues } from './payload/collections/Venues';
+import { clubSettings } from './payload/globals/ClubSettings';
+import { createPayloadEmailAdapter } from './payload/emailAdapter';
 import { serverEnv } from './lib/env/server';
 
 const filename = fileURLToPath(import.meta.url);
@@ -31,8 +47,33 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users],
+  collections: [
+    Users,
+    Players,
+    Teams,
+    Venues,
+    Leagues,
+    Seasons,
+    Matches,
+    TeamEvents,
+    Reports,
+    Previews,
+    News,
+    Albums,
+    Media,
+    Bookings,
+    SourceRecords,
+  ],
+  globals: [clubSettings],
   editor: lexicalEditor(),
+  email: createPayloadEmailAdapter({
+    fromAddress: serverEnv.payloadEmailFrom,
+    fromName: serverEnv.payloadEmailFromName,
+    smtpHost: serverEnv.smtpHost,
+    smtpPass: serverEnv.smtpPass,
+    smtpPort: serverEnv.smtpPort,
+    smtpUser: serverEnv.smtpUser,
+  }),
   graphQL: {
     disable: true,
   },
