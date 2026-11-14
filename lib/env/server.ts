@@ -24,6 +24,12 @@ export const serverEnv = {
   smtpPass: readEnvOrEmpty('SMTP_PASS'),
   contactEmailTo: readEnvOrEmpty('CONTACT_EMAIL_TO'),
   contactEmailFrom: readEnvOrEmpty('CONTACT_EMAIL_FROM'),
+  payloadEmailFrom:
+    readEnv('PAYLOAD_EMAIL_FROM') ??
+    readEnv('CONTACT_EMAIL_FROM') ??
+    readEnv('SMTP_USER') ??
+    'noreply@goldgetters.local',
+  payloadEmailFromName: readEnv('PAYLOAD_EMAIL_FROM_NAME') ?? 'Goldgetters',
   turnstileSecretKey: readEnvOrEmpty('TURNSTILE_SECRET_KEY'),
   payloadSecret: readEnvOrEmpty('PAYLOAD_SECRET'),
   payloadAdminEmail: readEnvOrEmpty('PAYLOAD_ADMIN_EMAIL'),
