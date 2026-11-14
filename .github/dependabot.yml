@@ -20,6 +20,9 @@ updates:
       semver-major-days: 21
       semver-minor-days: 7
       semver-patch-days: 3
+    ignore:
+      - dependency-name: 'graphql'
+        update-types: ['version-update:semver-major']
     groups:
       security-updates:
         applies-to: security-updates
@@ -29,6 +32,7 @@ updates:
         patterns:
           - 'payload'
           - '@payloadcms/*'
+          - 'graphql'
       next-react:
         patterns:
           - 'next'
@@ -74,7 +78,6 @@ updates:
       runtime-libraries:
         patterns:
           - '@types/nodemailer'
-          - 'graphql'
           - 'lucide-react'
           - 'nodemailer'
           - 'sharp'
