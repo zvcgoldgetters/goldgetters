@@ -5,7 +5,7 @@
 - Drupal remains authoritative during the migration period.
 - Imports are incremental and upsert existing records using stable Drupal identifiers.
 - Do not physically delete Payload records when a Drupal record disappears; report missing records for review.
-- Retain Drupal IDs, UUIDs where available, source paths, and source timestamps.
+- Retain Drupal IDs, UUIDs where available, source paths, and source timestamps in the dedicated `source-records` mapping collection rather than duplicating them onto domain collections. `source-records` enforces composite uniqueness on `(sourceType, sourceId)` so distinct Drupal record types (for example `uid`, `fid`, `nid`) keep their natural IDs without colliding across types. Persistent databases upgraded on an earlier revision receive the composite index automatically via `20261128_114500_source_records_composite_unique` (recover any previously dropped preview metadata from a backup or Drupal). Databases upgraded with the legacy `importRun` backfill tag remain rollback-compatible unless `importRun` was subsequently overwritten on colliding rows or new colliding post-upgrade rows were added, in which case rolling back requires restoring a pre-upgrade SQLite backup.
 - Preserve old URLs through aliases and redirects where useful.
 
 ## Content types
@@ -59,7 +59,7 @@
 ## Finance
 
 - Migrate the complete booking history, starting from zero.
-- Keep finance data private and admin-only.
+- Keep finance data private: full management by `treasurer` and `administrator`, with read-only visibility for active linked players (`Players.user` with `status: 'active'`).
 - Preserve fixed categories: Lidgeld, Inschrijving, Licentie, Website, Zaalhuur, Sponsoring, Scheidsrechter, Kledij, Divers, Boete, Cadeau.
 - Preserve Inkomst/Uitgave and derive a signed amount for reporting.
 - Calculate balances and reports from transactions; do not migrate static charts.
@@ -73,4 +73,4 @@
 
 ## Permissions
 
-Preserve the intent of the Drupal roles, including administrator, afgevaardigde, artikelschrijver, fotograaf, organisator, penningmeester, speler, supporter, and verslaggever. Payload roles may be combined. Finance access is restricted to penningmeester and administrators; user/site configuration remains administrator-only.
+Preserve the intent of the Drupal roles in an explicit multi-role Payload vocabulary (`administrator`, `director`, `team-manager`, `treasurer`, `editor`, `member`). `treasurer` manages finances while active linked players have read-only access; `director` handles yearly setup (`leagues`, `seasons`, `players`, `Players.user`, `club-settings`) and non-admin user onboarding; `team-manager` handles scheduling (`matches`, `team-events`, `teams`, `venues`); `editor` manages own-attributed content (`news`, `reports`, `previews`, `albums`, `media`); and `administrator` handles technical configuration (`administrator` accounts/roles, `source-records`, and cross-author editorial overrides).
