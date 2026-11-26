@@ -1,0 +1,1 @@
+export { clubSettings } from './ClubSettings';

@@ -3,7 +3,27 @@ import { fileURLToPath } from 'url';
 import { buildConfig } from 'payload';
 import { sqliteAdapter } from '@payloadcms/db-sqlite';
 import { lexicalEditor } from '@payloadcms/richtext-lexical';
-import { Users } from './payload/collections/Users';
+import { Albums } from './payload/collections/Albums';
+import { Bookings } from './payload/collections/Bookings';
+import { Leagues } from './payload/collections/Leagues';
+import { Matches } from './payload/collections/Matches';
+import { Media } from './payload/collections/Media';
+import { News } from './payload/collections/News';
+import { Players } from './payload/collections/Players';
+import { Previews } from './payload/collections/Previews';
+import { Reports } from './payload/collections/Reports';
+import { Seasons } from './payload/collections/Seasons';
+import { SourceRecords } from './payload/collections/SourceRecords';
+import { TeamEvents } from './payload/collections/TeamEvents';
+import { Teams } from './payload/collections/Teams';
+import { Users, withUsersRoleWriteGuard } from './payload/collections/Users';
+import { Venues } from './payload/collections/Venues';
+import { clubSettings } from './payload/globals/ClubSettings';
+import {
+  withDefaultDenyCollectionAccess,
+  withDefaultDenyGlobalAccess,
+} from './payload/access/roles';
+import { createPayloadEmailAdapter } from './payload/emailAdapter';
 import { serverEnv } from './lib/env/server';
 
 const filename = fileURLToPath(import.meta.url);
@@ -31,19 +51,47 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users],
+  collections: [
+    Users,
+    Players,
+    Teams,
+    Venues,
+    Leagues,
+    Seasons,
+    Matches,
+    TeamEvents,
+    Reports,
+    Previews,
+    News,
+    Albums,
+    Media,
+    Bookings,
+    SourceRecords,
+  ].map(withDefaultDenyCollectionAccess),
+  globals: [clubSettings].map(withDefaultDenyGlobalAccess),
   editor: lexicalEditor(),
+  email: createPayloadEmailAdapter({
+    fromAddress: serverEnv.payloadEmailFrom,
+    fromName: serverEnv.payloadEmailFromName,
+    smtpHost: serverEnv.smtpHost,
+    smtpPass: serverEnv.smtpPass,
+    smtpPort: serverEnv.smtpPort,
+    smtpUser: serverEnv.smtpUser,
+  }),
   graphQL: {
     disable: true,
   },
   secret: serverEnv.payloadSecret,
+  serverURL: serverEnv.payloadServerUrl,
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
-  db: sqliteAdapter({
-    client: {
-      url: serverEnv.databaseUri,
-      authToken: serverEnv.databaseAuthToken,
-    },
-  }),
+  db: withUsersRoleWriteGuard(
+    sqliteAdapter({
+      client: {
+        url: serverEnv.databaseUri,
+        authToken: serverEnv.databaseAuthToken,
+      },
+    }),
+  ),
 });

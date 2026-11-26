@@ -45,6 +45,8 @@ cp .env.example .env
 - Optional:
   - `CONTACT_EMAIL_TO`
   - `CONTACT_EMAIL_FROM`
+  - `PAYLOAD_EMAIL_FROM` and `PAYLOAD_EMAIL_FROM_NAME` for Payload auth emails such as forgot-password links
+  - `PAYLOAD_SERVER_URL` canonical HTTP(S) origin used for Payload absolute URLs (such as password-reset links)
   - `PAYLOAD_AUTO_LOGIN_ENABLED`
   - `PAYLOAD_ADMIN_EMAIL`
   - `PAYLOAD_ADMIN_PASSWORD`
@@ -61,11 +63,19 @@ npm run dev
 App: [http://localhost:3000](http://localhost:3000)  
 Payload admin: [http://localhost:3000/admin](http://localhost:3000/admin)
 
+Local development uses Payload's schema push against `payload.db`. Keep that
+database separate from migration-managed databases: do not run `npm run migrate`
+against the default local file and then start `npm run dev`. If schema push
+asks whether a changed column should be renamed, stop the server, back up and
+remove the empty local `payload.db`, then restart development with a fresh
+database.
+
 ## Scripts
 
 - `npm run dev` - start local development server
-- `npm run build` - run Payload migrations, then build Next.js
+- `npm run build` - run pending Payload migrations, then build Next.js
 - `npm run ci` - CI-equivalent build (`payload migrate && next build`)
+- `npm run migrate:status` - show applied and pending Payload migrations
 - `npm run start` - start production server
 - `npm run lint` - run ESLint
 - `npm run typecheck` - run the native TypeScript 7 compiler

@@ -18,7 +18,8 @@
     "prepare": "husky || true",
     "migrate": "payload migrate",
     "migrate:create": "payload migrate:create",
-    "migrate:down": "payload migrate:down"
+    "migrate:down": "payload migrate:down",
+    "migrate:status": "payload migrate:status"
   },
   "dependencies": {
     "@payloadcms/db-sqlite": "3.93.0",

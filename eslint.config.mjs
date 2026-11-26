@@ -79,6 +79,7 @@ const eslintConfig = [
       'out/**',
       'build/**',
       'migrations/**',
+      'app/(payload)/admin/importMap.js',
       'next-env.d.ts',
     ],
   },
